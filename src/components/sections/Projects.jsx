@@ -3,11 +3,11 @@ import React from 'react';
 export default function Projects() {
   const projects = [
     {
-      title: "Sistema de Gestión Web",
-      description: "Aplicación web full-stack para el control de inventario y facturación. Incluye autenticación segura y panel de administración en tiempo real.",
-      tech: ["React", "Node.js", "PostgreSQL"],
-      github: "https://github.com/Seba-erc",
-      demo: "#", // Reemplazar por link real o dejar "#" si no hay demo
+      title: "Portafolio Web Profesional",
+      description: "Portafolio personal interactivo y responsivo. Cuenta con un diseño moderno (Glassmorphism), despliegue automatizado con GitHub Actions y configuración de dominio personalizado.",
+      tech: ["React", "Vite", "CSS", "GitHub Actions"],
+      github: "https://github.com/Seba-erc/Portafolio-Web",
+      demo: "https://devseba.cl",
       icon: "devicon-react-original"
     },
     {
