@@ -14,10 +14,10 @@ export const projectsData = [
     title: "Control de Acceso de Vehículos",
     shortDescription: "Plataforma web para el registro y control de vehículos. Incluye panel de administración, roles de usuario y vistas de ingreso/salida.",
     longDescription: "Este proyecto es un demo interactivo de un sistema de control de acceso vehicular.\n\nCuenta con interfaz de login, panel de recepción para registrar ingresos y salidas, y un panel de administrador para gestionar usuarios y reportes.\n\nEl diseño está optimizado para uso ágil en porterías o casetas de seguridad, con validación de formularios en tiempo real, modo oscuro y una experiencia de usuario fluida desarrollada íntegramente con tecnologías web estándar.",
-    tech: ["HTML5", "CSS3", "JavaScript", "UI/UX"],
+    tech: ["React", "MySQL", "DBeaver", "UI/UX"],
     github: "https://github.com/Seba-erc",
     demo: "/demos/Demo-Control-Acceso-Vehiculos.html",
-    icon: "devicon-javascript-plain"
+    icon: "devicon-react-original"
   },
   {
     id: 3,
