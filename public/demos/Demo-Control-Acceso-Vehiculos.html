@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PagWeb — Control de Acceso de Vehículos (Demo)</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+    --primary-purple: #421075;
+    --primary-orange: #ff5500;
+    --bg-light: #f8f9fc;
+    --white: #ffffff;
+    --text-dark: #1e293b;
+    --text-muted: #64748b;
+    --border-color: #e2e8f0;
+    --error: #ef4444;
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.2), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 20px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+
+body { background-color: var(--bg-light); color: var(--text-dark); min-height: 100vh; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+
+button, select, input { font-family: inherit; }
+
+/* === LOGIN === */
+.login-wrapper { display: none; min-height: 100vh; justify-content: center; align-items: center; background: linear-gradient(135deg, var(--primary-purple) 0%, #2a0a4a 100%); padding: 20px; }
+.login-wrapper.active { display: flex; }
+.login-card { background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(12px); padding: 50px 40px; border-radius: var(--radius-xl); box-shadow: var(--shadow-xl); width: 100%; max-width: 440px; border: 1px solid rgba(255, 255, 255, 0.2); animation: fadeIn 0.5s ease-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.login-brand { display: flex; flex-direction: column; align-items: center; margin-bottom: 25px; }
+.login-brand-title { font-size: 2.4rem; font-weight: 900; letter-spacing: -1.5px; color: var(--primary-purple); margin-top: 14px; line-height: 1; }
+.login-card h2 { text-align: center; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 25px; font-weight: 700; }
+.error-text { color: var(--error); font-size: 0.85rem; font-weight: 600; margin-top: 12px; text-align: center; background: #fef2f2; padding: 8px; border-radius: var(--radius-sm); border: 1px solid #fca5a5; }
+.login-hint { text-align: center; font-size: 0.78rem; color: var(--text-muted); margin-top: 22px; line-height: 1.6; }
+.login-hint b { color: var(--text-dark); }
+.demo-tag { display: inline-block; background: var(--primary-orange); color: white; font-size: 0.65rem; font-weight: 800; letter-spacing: 1px; padding: 3px 10px; border-radius: 20px; margin-bottom: 14px; text-transform: uppercase; }
+
+/* === NAVBAR === */
+.navbar { background-color: var(--primary-purple); padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; color: var(--white); box-shadow: var(--shadow-md); position: sticky; top: 0; z-index: 100; }
+.logo { font-size: 1.8rem; font-weight: 900; letter-spacing: -1px; display: flex; align-items: center; }
+.registry { color: rgba(255, 255, 255, 0.9); font-size: 1.2rem; margin-left: 15px; font-weight: 500; border-left: 1px solid rgba(255, 255, 255, 0.3); padding-left: 15px; }
+.nav-links { display: flex; gap: 35px; }
+.nav-links a { color: rgba(255, 255, 255, 0.7); text-decoration: none; font-weight: 600; padding: 8px 0; position: relative; transition: var(--transition); cursor: pointer; }
+.nav-links a::after { content: ''; position: absolute; width: 0; height: 3px; bottom: 0; left: 0; background-color: var(--primary-orange); transition: var(--transition); border-radius: 3px; }
+.nav-links a:hover, .nav-links a.active { color: var(--white); }
+.nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+.user-menu { display: flex; align-items: center; gap: 20px; }
+.user-info { text-align: right; }
+.user-label { font-weight: 700; font-size: 1rem; }
+.user-role { font-size: 0.75rem; color: var(--primary-orange); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+.btn-outline { background-color: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: var(--white); padding: 8px 18px; border-radius: var(--radius-md); cursor: pointer; font-weight: 600; transition: var(--transition); }
+.btn-outline:hover { background-color: rgba(255, 255, 255, 0.2); border-color: var(--white); }
+.btn-outline-dark { background-color: transparent; border: 1px solid var(--primary-purple); color: var(--primary-purple); padding: 8px 18px; border-radius: var(--radius-md); cursor: pointer; font-weight: 600; transition: var(--transition); }
+.btn-outline-dark:hover { background-color: var(--primary-purple); color: var(--white); }
+.btn-outline-dark:disabled { opacity: .6; cursor: not-allowed; }
+.btn-icon { font-size: 20px; padding: 8px; line-height: 1; border-radius: 50%; }
+.menu-dropdown { position: absolute; top: 120%; right: 0; z-index: 1001; background-color: var(--white); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); min-width: 240px; overflow: hidden; border: 1px solid var(--border-color); }
+.menu-dropdown button { display: block; width: 100%; text-align: left; padding: 14px 20px; border: none; background: var(--white); color: var(--text-dark); cursor: pointer; font-size: 0.95rem; font-weight: 500; transition: var(--transition); }
+.menu-dropdown button:hover { background-color: var(--bg-light); color: var(--primary-purple); }
+.menu-dropdown button + button { border-top: 1px solid var(--border-color); }
+
+/* === MAIN LAYOUT === */
+.principal { padding: 30px 20px; }
+.view-container { max-width: 1280px; margin: 0 auto; }
+.card { background-color: var(--white); padding: 30px; border-radius: var(--radius-lg); margin-bottom: 24px; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); transition: var(--transition); }
+.card:hover { box-shadow: var(--shadow-md); }
+.border-top-orange { border-top: 4px solid var(--primary-orange); }
+.card-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 15px; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); flex-wrap: wrap; gap: 10px; }
+.card-header h3 { color: var(--primary-purple); margin: 0; font-size: 1.3rem; font-weight: 700; }
+.badge-time { background-color: var(--bg-light); padding: 6px 12px; border-radius: var(--radius-sm); font-size: 0.85rem; color: var(--text-muted); font-weight: 700; border: 1px solid var(--border-color); }
+
+/* === FORMS === */
+.section-title { color: var(--primary-orange); margin-bottom: 15px; font-weight: 700; }
+.mt-15 { margin-top: 15px; } .mt-25 { margin-top: 25px; } .mt-30 { margin-top: 30px; }
+.uppercase { text-transform: uppercase; }
+.grid-form { display: grid; gap: 20px; }
+.col-2 { grid-template-columns: repeat(2, 1fr); }
+.col-3 { grid-template-columns: repeat(3, 1fr); }
+.col-4 { grid-template-columns: repeat(4, 1fr); }
+.col-5 { grid-template-columns: repeat(5, 1fr); }
+.full-width { grid-column: 1 / -1; }
+.input-group { display: flex; flex-direction: column; }
+.input-group label { font-weight: 600; font-size: 0.9rem; margin-bottom: 8px; color: var(--text-dark); }
+.input-group input, .input-group select { padding: 12px 14px; border: 1px solid var(--border-color); border-radius: var(--radius-md); font-size: 1rem; background-color: #f8fafc; color: var(--text-dark); transition: var(--transition); width: 100%; }
+.input-group input:focus, .input-group select:focus { outline: none; border-color: var(--primary-orange); box-shadow: 0 0 0 3px rgba(255, 85, 0, 0.15); background-color: var(--white); }
+.hint-warning { color: #c0392b; font-size: 13px; margin-top: 4px; display: none; }
+.hint-warning.show { display: block; }
+.photo-upload { padding: 20px; background-color: var(--bg-light); border: 2px dashed #cbd5e1; border-radius: var(--radius-lg); text-align: center; transition: var(--transition); }
+.photo-upload:hover { border-color: var(--primary-orange); background-color: #fffaf7; }
+.photo-upload label { font-weight: 700; display: block; margin-bottom: 10px; color: var(--text-dark); }
+.photo-upload input { width: 100%; }
+.photo-preview { margin-top: 12px; max-width: 160px; border-radius: var(--radius-md); border: 2px solid var(--border-color); display: none; }
+.photo-preview.show { display: block; }
+.btn-primary { background-color: var(--primary-orange); color: var(--white); padding: 12px 28px; border: none; border-radius: var(--radius-md); font-weight: 700; cursor: pointer; font-size: 1.05rem; transition: var(--transition); box-shadow: var(--shadow-sm); display: inline-flex; justify-content: center; align-items: center; }
+.btn-primary:hover:not(:disabled) { background-color: #e64d00; transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.btn-primary:active:not(:disabled) { transform: translateY(0); }
+.btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+.btn-small { background-color: var(--primary-purple); color: white; border: none; padding: 6px 12px; border-radius: var(--radius-sm); cursor: pointer; font-weight: 600; transition: var(--transition); font-size: 0.85rem; }
+.btn-small:hover { background-color: #330c5a; }
+.btn-success { background-color: #28a745; color: white; }
+.btn-success:hover { background-color: #1e7e34; }
+.btn-info { background-color: #007bff; color: white; }
+.btn-info:hover { background-color: #0062cc; }
+.btn-secondary { background-color: #6c757d; color: white; }
+.btn-secondary:hover { background-color: #545b62; }
+.btn-danger { background-color: #dc3545; color: white; }
+.btn-danger:hover { background-color: #bd2130; }
+
+/* === TABLAS === */
+.top-scrollbar-container { overflow-x: auto; overflow-y: hidden; width: 100%; }
+.top-scrollbar-container::-webkit-scrollbar { -webkit-appearance: none; height: 14px; }
+.top-scrollbar-container::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 8px; }
+.top-scrollbar-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 8px; }
+.top-scrollbar-container::-webkit-scrollbar-thumb:hover { background: var(--primary-orange); }
+.table-responsive { overflow-x: auto; overflow-y: auto; max-height: calc(100vh - 120px); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); width: 100%; }
+.table-responsive::-webkit-scrollbar { -webkit-appearance: none; height: 14px; width: 14px; }
+.table-responsive::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 8px; }
+.table-responsive::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 8px; }
+.table-responsive::-webkit-scrollbar-thumb:hover { background: var(--primary-orange); }
+.table-primary { width: 100%; border-collapse: collapse; font-size: 0.95rem; text-align: left; background: var(--white); }
+.table-primary th { position: sticky; top: 0; z-index: 10; background-color: #f1f5f9; padding: 14px 16px; color: var(--primary-purple); font-weight: 700; text-transform: uppercase; font-size: 0.78rem; letter-spacing: 0.5px; border-bottom: 2px solid var(--border-color); white-space: nowrap; }
+.table-primary td { padding: 14px 16px; border-bottom: 1px solid var(--border-color); vertical-align: middle; color: var(--text-dark); white-space: nowrap; }
+.table-primary tbody tr { transition: var(--transition); }
+.table-primary tbody tr:hover { background-color: #f8fafc; }
+.text-muted { color: var(--text-muted); font-size: 0.85rem; }
+.td-main { font-size: 1.05rem; font-weight: 700; color: var(--primary-purple); }
+.img-thumbnail { width: 64px; height: 64px; object-fit: cover; border-radius: var(--radius-sm); border: 2px solid var(--border-color); transition: var(--transition); cursor: pointer; }
+.img-thumbnail:hover { transform: scale(1.1); border-color: var(--primary-orange); }
+.row-alerta { background-color: #fdecea; }
+.text-danger { color: #c0392b; }
+.text-success { color: #28a745; }
+.font-bold { font-weight: 700; }
+
+.mobile-toggle { display: none; background: transparent; border: 1px solid rgba(255, 255, 255, 0.3); color: white; font-size: 24px; cursor: pointer; padding: 6px 12px; border-radius: var(--radius-sm); transition: var(--transition); }
+.mobile-toggle:hover { background: rgba(255,255,255,0.1); }
+
+/* === MODALES (añadido para la demo) === */
+.modal-overlay { position: fixed; inset: 0; z-index: 1500; background-color: rgba(0,0,0,0.65); display: flex; align-items: flex-start; justify-content: center; overflow-y: auto; padding: 40px 20px; }
+.modal-box { background: var(--white); border-radius: var(--radius-xl); box-shadow: var(--shadow-xl); width: 100%; max-width: 600px; padding: 36px; animation: fadeIn 0.25s ease-out; }
+.modal-box.narrow { max-width: 440px; }
+.modal-box h2 { color: var(--primary-purple); font-size: 1.4rem; margin-bottom: 4px; }
+.foto-modal-overlay { position: fixed; inset: 0; z-index: 1600; background-color: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; padding: 20px; }
+.foto-modal-img { max-width: 90vw; max-height: 85vh; border-radius: var(--radius-md); }
+.modal-close { position: absolute; top: 18px; right: 24px; font-size: 30px; color: #f1f1f1; cursor: pointer; font-weight: bold; }
+.mini-stat-grid .card { padding: 18px 20px; }
+.mini-stat-grid .card h4 { font-size: 0.78rem; text-transform: uppercase; letter-spacing: .5px; color: var(--text-muted); font-weight: 700; margin-bottom: 6px; }
+.mini-stat-grid .card p { font-size: 1.7rem; font-weight: 800; color: var(--primary-purple); }
+.alerta-card { border-left: 4px solid #c0392b; }
+.alerta-card p { color: #c0392b !important; }
+.locked-badge { color: #c0392b; font-weight: 700; }
+.active-badge { color: #28a745; font-weight: 700; }
+.demo-note { text-align: center; font-size: 0.75rem; color: rgba(255,255,255,.65); padding: 10px; }
+
+/* Responsividad */
+@media (max-width: 1024px) {
+    .navbar { padding: 15px 20px; flex-wrap: wrap; }
+    .logo { order: 1; }
+    .user-menu { order: 2; }
+    .nav-links { order: 3; width: 100%; justify-content: center; margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255, 255, 255, 0.2); gap: 15px; flex-wrap: wrap; }
+    .grid-form.col-5, .grid-form.col-4 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+    .grid-form.col-2, .grid-form.col-3, .grid-form.col-4, .grid-form.col-5 { grid-template-columns: 1fr; }
+    .navbar { justify-content: space-between; }
+    .logo { flex: 1; }
+    .mobile-toggle { display: block; order: 2; }
+    .nav-links { display: none; flex-direction: column; align-items: center; width: 100%; }
+    .user-menu { display: none; flex-direction: row; flex-wrap: wrap; justify-content: center; align-items: center; border-top: 1px solid rgba(255, 255, 255, 0.2); padding-top: 15px; margin-top: 15px; width: 100%; gap: 15px; }
+    .nav-links.show, .user-menu.show { display: flex; }
+    .nav-links a { padding: 12px 15px; background: rgba(255, 255, 255, 0.1); border-radius: var(--radius-sm); width: 100%; text-align: center; }
+    .nav-links a::after { display: none; }
+    .nav-links a:hover, .nav-links a.active { background: var(--primary-orange); color: var(--white); }
+    .user-info { text-align: center; }
+    .login-card { padding: 30px 20px; }
+    .card { padding: 20px 15px; }
+    .top-scrollbar-container, .table-responsive { border-left: none; border-right: none; border-radius: 0; margin-left: -15px; margin-right: -15px; width: calc(100% + 30px); }
+}
+</style>
+</head>
+<body>
+
+<!-- ======================= LOGIN ======================= -->
+<div class="login-wrapper active" id="vista-login">
+    <div class="login-card">
+        <div class="login-brand">
+            <span class="demo-tag">Demo interactiva</span>
+            <svg width="86" height="86" viewBox="15 15 170 170" xmlns="http://www.w3.org/2000/svg">
+                <rect width="200" height="200" rx="48" fill="#101A2D"/>
+                <g transform="translate(20,18)">
+                    <path d="M80 6 L132 26 V84 C132 118 112 146 80 160 C48 146 28 118 28 84 V26 L80 6Z" fill="none" stroke="#4DA3E0" stroke-width="6.5" stroke-linejoin="round" stroke-linecap="round"/>
+                    <g transform="translate(42,52)">
+                        <path d="M10 20 L17 5 H59 L66 20 Z" fill="white"/>
+                        <rect x="22" y="8" width="32" height="10" rx="2" fill="#101A2D" opacity="0.9"/>
+                        <rect x="0" y="20" width="76" height="30" rx="7" fill="white"/>
+                        <circle cx="18" cy="47" r="5" fill="#101A2D"/>
+                        <circle cx="58" cy="47" r="5" fill="#101A2D"/>
+                    </g>
+                </g>
+                <g transform="translate(118,118)">
+                    <circle cx="32" cy="32" r="28" fill="#101A2D"/>
+                    <circle cx="32" cy="32" r="22" fill="#22C55E"/>
+                    <path d="M20 32 L28.5 40.5 L46 23" fill="none" stroke="white" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </g>
+            </svg>
+            <div class="login-brand-title">PagWeb</div>
+        </div>
+        <h2>Control de Acceso de Vehículos</h2>
+        <form id="form-login">
+            <div class="input-group">
+                <label for="login-usuario">Nombre de Usuario</label>
+                <input type="text" id="login-usuario" required placeholder="Introduce tu Usuario" autocomplete="username">
+            </div>
+            <div class="input-group mt-15">
+                <label for="login-clave">Contraseña</label>
+                <input type="password" id="login-clave" required placeholder="Introduce tu Contraseña" autocomplete="current-password">
+            </div>
+            <div id="login-error"></div>
+            <div style="display:flex; justify-content:center; width:100%;">
+                <button type="submit" class="btn-primary mt-25" id="login-btn">Ingresar</button>
+            </div>
+        </form>
+        <div class="login-hint">
+            Cuentas de demostración:<br>
+            <b>admin</b> / cambiar123 — Administrador<br>
+            <b>msilva</b> / super123 — Supervisor<br>
+            <b>jrivas</b> / oper123 — Operador
+        </div>
+    </div>
+</div>
+
+<!-- ======================= APP ======================= -->
+<div id="vista-app" style="display:none;">
+    <div id="navbar-container"></div>
+    <main class="principal">
+        <div id="main-container"></div>
+    </main>
+</div>
+
+<div id="modal-container"></div>
+<div id="toast-container"></div>
+
+<script>
+(function () {
+'use strict';
+
+/* =====================================================================
+   UTILIDADES — misma lógica que backend/utils y src/utils del proyecto
+   ===================================================================== */
+function esc(v) {
+    if (v === null || v === undefined) return '';
+    return String(v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+function normalizarPatente(v) {
+    if (!v) return '';
+    return String(v).replace(/[.\s-]/g, '').toUpperCase();
+}
+function calcularDV(cuerpo) {
+    let suma = 0, mult = 2;
+    for (let i = cuerpo.length - 1; i >= 0; i--) {
+        suma += parseInt(cuerpo[i], 10) * mult;
+        mult = mult === 7 ? 2 : mult + 1;
+    }
+    const resto = 11 - (suma % 11);
+    if (resto === 11) return '0';
+    if (resto === 10) return 'K';
+    return String(resto);
+}
+function normalizarRut(v) {
+    if (!v) return null;
+    const limpio = String(v).replace(/[.\s]/g, '').toUpperCase();
+    const m = limpio.match(/^(\d{7,8})-?(\d|K)$/);
+    if (!m) return null;
+    return m[1] + '-' + m[2];
+}
+function validarRut(v) {
+    const n = normalizarRut(v);
+    if (!n) return false;
+    const partes = n.split('-');
+    return calcularDV(partes[0]) === partes[1];
+}
+function formatearRutVisual(v) {
+    const limpio = String(v || '').replace(/[^0-9kK]/g, '').toUpperCase();
+    if (limpio.length <= 1) return limpio;
+    const cuerpo = limpio.slice(0, -1);
+    const dv = limpio.slice(-1);
+    const conPuntos = cuerpo.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    return conPuntos + '-' + dv;
+}
+function formatearTelefonoVisual(v) {
+    let digitos = String(v || '').replace(/\D/g, '');
+    if (digitos.startsWith('56')) digitos = digitos.slice(2);
+    digitos = digitos.slice(0, 9);
+    if (digitos.length === 0) return '';
+    let r = '+56';
+    r += ' ' + digitos.slice(0, 1);
+    if (digitos.length > 1) r += ' ' + digitos.slice(1, 5);
+    if (digitos.length > 5) r += ' ' + digitos.slice(5, 9);
+    return r;
+}
+function horasDesde(fecha) { return (Date.now() - new Date(fecha).getTime()) / 3600000; }
+function fmtFecha(v) { return v ? new Date(v).toLocaleString('es-CL') : ''; }
+function hace(horas) { return new Date(Date.now() - horas * 3600000).toISOString(); }
+function sumarHoras(iso, horas) { return new Date(new Date(iso).getTime() + horas * 3600000).toISOString(); }
+
+function escaparCampoCSV(v) {
+    if (v === null || v === undefined) return '';
+    const t = String(v);
+    if (/[",\n]/.test(t)) return '"' + t.replace(/"/g, '""') + '"';
+    return t;
+}
+function construirCSV(headers, filas) {
+    return [headers].concat(filas).map(f => f.map(escaparCampoCSV).join(',')).join('\r\n');
+}
+function descargarCSV(contenido, nombre) {
+    const blob = new Blob(['\uFEFF' + contenido], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = nombre + '-' + new Date().toISOString().slice(0, 10) + '.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+const FOTO_PLACEHOLDER = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%23f1f5f9'/><rect x='18' y='38' width='64' height='38' rx='6' fill='%23421075'/><circle cx='50' cy='57' r='13' fill='white'/><circle cx='50' cy='57' r='8' fill='%23421075'/><rect x='38' y='28' width='24' height='12' rx='3' fill='%23421075'/><circle cx='72' cy='47' r='3' fill='%23ff5500'/></svg>";
+
+const MOTIVOS = ['Entrega de mercadería', 'Retiro', 'Mantenimiento', 'Visita', 'Trabajador de la empresa', 'Otro'];
+const TIPOS = ['Camión', 'Furgón', 'Auto', 'Camioneta', 'Moto'];
+const ETIQUETAS_ACCION = {
+    usuario_creado: { icono: '➕', label: 'Usuario creado' },
+    usuario_eliminado: { icono: '🗑️', label: 'Usuario eliminado' },
+    clave_reseteada: { icono: '🔑', label: 'Clave reseteada' },
+    cuenta_desbloqueada: { icono: '🔓', label: 'Cuenta desbloqueada' },
+    sesiones_cerradas: { icono: '🚪', label: 'Sesiones cerradas' },
+    registro_eliminado: { icono: '🗑️', label: 'Registro eliminado' },
+    patente_bloqueada: { icono: '🚫', label: 'Patente bloqueada' },
+    patente_desbloqueada: { icono: '✅', label: 'Patente desbloqueada' },
+};
+
+/* =====================================================================
+   DATOS DE DEMOSTRACIÓN (en memoria — se reinician al recargar la página)
+   ===================================================================== */
+let usuarios = [
+    { usuario: 'admin', nombre: 'Administrador General', clave: 'cambiar123', rol: 'admin', bloqueadoHasta: null },
+    { usuario: 'msilva', nombre: 'Marcela Silva Contreras', clave: 'super123', rol: 'supervisor', bloqueadoHasta: null },
+    { usuario: 'jrivas', nombre: 'Jorge Rivas Peña', clave: 'oper123', rol: 'operador', bloqueadoHasta: null },
+    { usuario: 'pcastro', nombre: 'Paula Castro Lobos', clave: 'oper123', rol: 'operador', bloqueadoHasta: new Date(Date.now() + 10 * 60000).toISOString() },
+];
+
+let patentesBloqueadas = [
+    { id: 1, patente: 'ABCE67', motivo: 'Intento de ingreso no autorizado registrado en portería (mar-2026)', agregadoPor: 'msilva', fechaAgregado: hace(15 * 24) },
+    { id: 2, patente: 'ZZYY99', motivo: 'Vehículo con orden de restricción interna vigente', agregadoPor: 'admin', fechaAgregado: hace(9 * 24) },
+];
+
+let registros = [
+    { conductor: 'Juan Pérez Soto', rut: '12.345.678-5', telefono: '+56 9 1234 5678', acompanantes: '', procedencia: 'Centro de Distribución Sur', motivo: 'Entrega de mercadería', patente: 'BBHR56', tipo: 'Camión', marca: 'Kia Frontier', fecha: hace(1.5), fechaSalida: null, foto: FOTO_PLACEHOLDER, creadoPor: 'jrivas', editNote: '', editadoPor: '', fechaEdicion: null },
+    { conductor: 'Marcelo Iturra Peña', rut: '2.198.765-4', telefono: '+56 9 7788 9900', acompanantes: '', procedencia: 'Bodega Norte', motivo: 'Mantenimiento', patente: 'LKJH65', tipo: 'Furgón', marca: 'Renault Kangoo', fecha: hace(9), fechaSalida: null, foto: '', creadoPor: 'admin', editNote: '', editadoPor: '', fechaEdicion: null },
+    { conductor: 'María González Muñoz', rut: '9.876.543-3', telefono: '+56 9 8765 4321', acompanantes: 'Pedro Lagos', procedencia: 'Bodega Norte', motivo: 'Retiro', patente: 'JJKL78', tipo: 'Furgón', marca: 'Hyundai HD65', fecha: hace(6), fechaSalida: null, foto: '', creadoPor: 'msilva', editNote: '', editadoPor: '', fechaEdicion: null },
+    { conductor: 'Roberto Vidal Campos', rut: '3.216.549-4', telefono: '+56 9 4433 2211', acompanantes: '', procedencia: 'Planta Quilicura', motivo: 'Entrega de mercadería', patente: 'TRWY89', tipo: 'Camión', marca: 'Ford Cargo', fecha: hace(0.75), fechaSalida: null, foto: FOTO_PLACEHOLDER, creadoPor: 'jrivas', editNote: '', editadoPor: '', fechaEdicion: null },
+    { conductor: 'Carlos Muñoz Fuentes', rut: '8.123.456-6', telefono: '+56 9 2233 4455', acompanantes: '', procedencia: 'Sucursal Providencia', motivo: 'Visita', patente: 'RSTX12', tipo: 'Auto', marca: 'Toyota Corolla', fecha: hace(3 * 24), fechaSalida: sumarHoras(hace(3 * 24), 0.7), foto: '', creadoPor: 'jrivas', editNote: '', editadoPor: '', fechaEdicion: null },
+    { conductor: 'Camila Rojas Díaz', rut: '15.234.567-4', telefono: '+56 9 5566 7788', acompanantes: '', procedencia: 'Planta Quilicura', motivo: 'Trabajador de la empresa', patente: 'KLMN34', tipo: 'Camioneta', marca: 'Chevrolet N300', fecha: hace(5 * 24), fechaSalida: sumarHoras(hace(5 * 24), 8), foto: '', creadoPor: 'admin', editNote: '', editadoPor: '', fechaEdicion: null },
+    { conductor: 'Andrés Contreras Silva', rut: '18.765.432-7', telefono: '+56 9 3344 5566', acompanantes: '', procedencia: 'Proveedor Externo', motivo: 'Mantenimiento', patente: 'PQRS90', tipo: 'Furgón', marca: 'Nissan NV200', fecha: hace(2 * 24), fechaSalida: sumarHoras(hace(2 * 24), 2), foto: '', creadoPor: 'msilva', editNote: 'Se corrigió patente mal digitada', editadoPor: 'msilva', fechaEdicion: sumarHoras(hace(2 * 24), 2.5) },
+    { conductor: 'Francisca Morales Reyes', rut: '7.654.321-6', telefono: '+56 9 9988 7766', acompanantes: '', procedencia: 'Oficina Central', motivo: 'Otro', patente: 'XYWQ45', tipo: 'Auto', marca: 'Mazda 3', fecha: hace(7 * 24), fechaSalida: sumarHoras(hace(7 * 24), 1), foto: '', creadoPor: 'jrivas', editNote: '', editadoPor: '', fechaEdicion: null },
+    { conductor: 'Juan Pérez Soto', rut: '12.345.678-5', telefono: '+56 9 1234 5678', acompanantes: '', procedencia: 'Centro de Distribución Sur', motivo: 'Entrega de mercadería', patente: 'BBHR56', tipo: 'Camión', marca: 'Kia Frontier', fecha: hace(10 * 24), fechaSalida: sumarHoras(hace(10 * 24), 0.6), foto: '', creadoPor: 'jrivas', editNote: '', editadoPor: '', fechaEdicion: null },
+    { conductor: 'María González Muñoz', rut: '9.876.543-3', telefono: '+56 9 8765 4321', acompanantes: '', procedencia: 'Bodega Norte', motivo: 'Retiro', patente: 'FGHT23', tipo: 'Auto', marca: 'Suzuki Swift', fecha: hace(12 * 24), fechaSalida: sumarHoras(hace(12 * 24), 0.85), foto: '', creadoPor: 'msilva', editNote: '', editadoPor: '', fechaEdicion: null },
+    { conductor: 'Carlos Muñoz Fuentes', rut: '8.123.456-6', telefono: '+56 9 2233 4455', acompanantes: '', procedencia: 'Sucursal Providencia', motivo: 'Retiro', patente: 'RSTX12', tipo: 'Auto', marca: 'Toyota Corolla', fecha: hace(15 * 24), fechaSalida: sumarHoras(hace(15 * 24), 0.4), foto: '', creadoPor: 'admin', editNote: '', editadoPor: '', fechaEdicion: null },
+    { conductor: 'Diego Fernández Paredes', rut: '6.789.123-6', telefono: '+56 9 1122 3344', acompanantes: '', procedencia: 'Casa Matriz', motivo: 'Visita', patente: 'DDCC11', tipo: 'Auto', marca: 'Peugeot 208', fecha: hace(20 * 24), fechaSalida: sumarHoras(hace(20 * 24), 0.5), foto: '', creadoPor: 'jrivas', editNote: '', editadoPor: '', fechaEdicion: null },
+    { conductor: 'Valentina Soto Bravo', rut: '4.455.667-7', telefono: '+56 9 6677 8899', acompanantes: '', procedencia: 'Sucursal Providencia', motivo: 'Trabajador de la empresa', patente: 'ZQXP67', tipo: 'Moto', marca: 'Honda CB160F', fecha: hace(22 * 24), fechaSalida: sumarHoras(hace(22 * 24), 0.25), foto: '', creadoPor: 'msilva', editNote: '', editadoPor: '', fechaEdicion: null },
+    { conductor: 'Valentina Soto Bravo', rut: '4.455.667-7', telefono: '+56 9 6677 8899', acompanantes: '', procedencia: 'Sucursal Providencia', motivo: 'Trabajador de la empresa', patente: 'ZQXP67', tipo: 'Moto', marca: 'Honda CB160F', fecha: hace(8 * 24), fechaSalida: sumarHoras(hace(8 * 24), 0.3), foto: '', creadoPor: 'msilva', editNote: '', editadoPor: '', fechaEdicion: null },
+    { conductor: 'Camila Rojas Díaz', rut: '15.234.567-4', telefono: '+56 9 5566 7788', acompanantes: 'Ana Sepúlveda', procedencia: 'Planta Quilicura', motivo: 'Trabajador de la empresa', patente: 'KLMN34', tipo: 'Camioneta', marca: 'Chevrolet N300', fecha: hace(25 * 24), fechaSalida: sumarHoras(hace(25 * 24), 9), foto: '', creadoPor: 'admin', editNote: '', editadoPor: '', fechaEdicion: null },
+    { conductor: 'Francisca Morales Reyes', rut: '7.654.321-6', telefono: '+56 9 9988 7766', acompanantes: '', procedencia: 'Oficina Central', motivo: 'Visita', patente: 'XYWQ45', tipo: 'Auto', marca: 'Mazda 3', fecha: hace(28 * 24), fechaSalida: sumarHoras(hace(28 * 24), 1.2), foto: '', creadoPor: 'jrivas', editNote: '', editadoPor: '', fechaEdicion: null },
+    { conductor: 'Diego Fernández Paredes', rut: '6.789.123-6', telefono: '+56 9 1122 3344', acompanantes: '', procedencia: 'Casa Matriz', motivo: 'Retiro', patente: 'DDCC11', tipo: 'Auto', marca: 'Peugeot 208', fecha: hace(30 * 24), fechaSalida: sumarHoras(hace(30 * 24), 0.6), foto: '', creadoPor: 'admin', editNote: '', editadoPor: '', fechaEdicion: null },
+    { conductor: 'Andrés Contreras Silva', rut: '18.765.432-7', telefono: '+56 9 3344 5566', acompanantes: '', procedencia: 'Proveedor Externo', motivo: 'Otro', patente: 'PQRS90', tipo: 'Furgón', marca: 'Nissan NV200', fecha: hace(33 * 24), fechaSalida: sumarHoras(hace(33 * 24), 3), foto: '', creadoPor: 'jrivas', editNote: '', editadoPor: '', fechaEdicion: null },
+].map((r, i) => Object.assign({ id: i + 1 }, r));
+
+let auditoria = [
+    { accion: 'usuario_creado', usuario: 'admin', detalle: 'Usuario msilva (Supervisor) creado', fecha: hace(25 * 24) },
+    { accion: 'usuario_creado', usuario: 'admin', detalle: 'Usuario jrivas (Operador) creado', fecha: hace(20 * 24) },
+    { accion: 'patente_bloqueada', usuario: 'msilva', detalle: 'Patente ABCE67 — Intento de ingreso no autorizado', fecha: hace(15 * 24) },
+    { accion: 'clave_reseteada', usuario: 'admin', detalle: 'Clave reseteada para pcastro', fecha: hace(12 * 24) },
+    { accion: 'registro_eliminado', usuario: 'admin', detalle: 'Registro duplicado (patente TESTX1) eliminado', fecha: hace(10 * 24) },
+    { accion: 'patente_bloqueada', usuario: 'admin', detalle: 'Patente ZZYY99 — Orden de restricción interna', fecha: hace(9 * 24) },
+    { accion: 'cuenta_desbloqueada', usuario: 'admin', detalle: 'Cuenta de pcastro desbloqueada tras verificación', fecha: hace(7 * 24) },
+    { accion: 'sesiones_cerradas', usuario: 'admin', detalle: 'Sesiones de jrivas cerradas en todos los dispositivos', fecha: hace(5 * 24) },
+    { accion: 'patente_desbloqueada', usuario: 'msilva', detalle: 'Patente FGHT23 retirada de la lista negra tras aclaración', fecha: hace(4 * 24) },
+].map((a, i) => Object.assign({ id: i + 1 }, a));
+
+let contadorRegistro = registros.length;
+let contadorPatente = patentesBloqueadas.length;
+let contadorAuditoria = auditoria.length;
+
+function registrarAuditoria(accion, usuario, detalle) {
+    contadorAuditoria++;
+    auditoria.unshift({ id: contadorAuditoria, accion: accion, usuario: usuario, detalle: detalle, fecha: new Date().toISOString() });
+}
+
+/* =====================================================================
+   ESTADO DE LA APLICACIÓN
+   ===================================================================== */
+const App = {
+    session: null,
+    activeTab: 'link-form',
+    regPagina: 1,
+    regFiltros: {},
+    regPorPagina: 6,
+    umbralHoras: 4,
+    editingId: null,
+    audPagina: 1,
+    audFiltros: {},
+    audPorPagina: 6,
+    fotoModalSrc: null,
+    rutSeleccionado: null,
+    modal: null, // 'clave' | 'usuario' | { tipo:'reset', usuario }
+    menuAbierto: false,
+    menuMovil: false,
+    toastTimer: null,
+};
+
+function tabsPorRol(rol) {
+    if (rol === 'admin') return [
+        { id: 'link-form', label: 'Registro' }, { id: 'link-reporte', label: 'Reportes' },
+        { id: 'link-usuarios', label: 'Usuarios' }, { id: 'link-lista-negra', label: 'Lista Negra' },
+        { id: 'link-auditoria', label: 'Auditoría' },
+    ];
+    if (rol === 'supervisor') return [
+        { id: 'link-form', label: 'Registro' }, { id: 'link-reporte', label: 'Reportes' },
+        { id: 'link-lista-negra', label: 'Lista Negra' },
+    ];
+    return [{ id: 'link-form', label: 'Registro' }, { id: 'link-reporte', label: 'Reportes' }];
+}
+function tituloPorRol(rol) {
+    if (rol === 'admin') return 'Dashboard Administrador';
+    if (rol === 'supervisor') return 'Dashboard Supervisador';
+    return 'Dashboard Operador';
+}
+
+/* =====================================================================
+   RENDER PRINCIPAL
+   ===================================================================== */
+function render() {
+    if (!App.session) {
+        document.getElementById('vista-login').classList.add('active');
+        document.getElementById('vista-app').style.display = 'none';
+        return;
+    }
+    document.getElementById('vista-login').classList.remove('active');
+    document.getElementById('vista-app').style.display = 'block';
+    renderNavbar();
+    renderMain();
+    renderModal();
+}
+
+function renderNavbar() {
+    const s = App.session;
+    const tabs = tabsPorRol(s.rol);
+    const tabsHtml = tabs.map(t =>
+        '<a class="' + (App.activeTab === t.id ? 'active' : '') + '" onclick="App.cambiarTab(\'' + t.id + '\')">' + t.label + '</a>'
+    ).join('');
+
+    document.getElementById('navbar-container').innerHTML =
+        '<nav class="navbar">' +
+        '<div class="logo">' +
+        '<svg width="46" height="46" viewBox="15 15 170 170" xmlns="http://www.w3.org/2000/svg" style="border-radius:12px; box-shadow:0 2px 4px rgba(0,0,0,0.2); margin-right:14px;">' +
+        '<rect width="200" height="200" rx="48" fill="#101A2D"/>' +
+        '<g transform="translate(20,18)"><path d="M80 6 L132 26 V84 C132 118 112 146 80 160 C48 146 28 118 28 84 V26 L80 6Z" fill="none" stroke="#4DA3E0" stroke-width="6.5" stroke-linejoin="round" stroke-linecap="round"/>' +
+        '<g transform="translate(42,52)"><path d="M10 20 L17 5 H59 L66 20 Z" fill="white"/><rect x="22" y="8" width="32" height="10" rx="2" fill="#101A2D" opacity="0.9"/><rect x="0" y="20" width="76" height="30" rx="7" fill="white"/><circle cx="18" cy="47" r="5" fill="#101A2D"/><circle cx="58" cy="47" r="5" fill="#101A2D"/></g></g>' +
+        '<g transform="translate(118,118)"><circle cx="32" cy="32" r="28" fill="#101A2D"/><circle cx="32" cy="32" r="22" fill="#22C55E"/><path d="M20 32 L28.5 40.5 L46 23" fill="none" stroke="white" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></g>' +
+        '</svg>' +
+        '<span class="registry">' + esc(tituloPorRol(s.rol)) + '</span>' +
+        '</div>' +
+        '<button class="mobile-toggle" onclick="App.toggleMenuMovil()">☰</button>' +
+        '<div class="nav-links ' + (App.menuMovil ? 'show' : '') + '">' + tabsHtml + '</div>' +
+        '<div class="user-menu ' + (App.menuMovil ? 'show' : '') + '" style="position:relative;">' +
+        '<div class="user-info"><div class="user-label">' + esc(s.nombre) + '</div><div class="user-role">' + esc(s.rol) + '</div></div>' +
+        '<button class="btn-outline btn-icon" title="Configuración de la cuenta" onclick="App.toggleMenu(event)">⚙️</button>' +
+        (App.menuAbierto ?
+            '<div style="position:fixed; inset:0; z-index:1000;" onclick="App.cerrarMenu()"></div>' +
+            '<div class="menu-dropdown">' +
+            '<button onclick="App.abrirModal(\'usuario\')">Cambiar nombre de usuario</button>' +
+            '<button onclick="App.abrirModal(\'clave\')">Cambiar contraseña</button>' +
+            '<button onclick="App.cerrarSesionesPropias()">Cerrar sesión en todos los dispositivos</button>' +
+            '</div>' : '') +
+        '<button class="btn-outline" onclick="App.logout()" style="display:flex; align-items:center; gap:6px;">' +
+        '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>' +
+        'Cerrar sesión</button>' +
+        '</div></nav>';
+}
+
+function renderMain() {
+    const rol = App.session.rol;
+    let html = '';
+    if (App.activeTab === 'link-form') html = vistaRegistroForm();
+    else if (App.activeTab === 'link-reporte') html = vistaReportes();
+    else if (App.activeTab === 'link-usuarios' && rol === 'admin') html = vistaUsuarios();
+    else if (App.activeTab === 'link-lista-negra' && (rol === 'admin' || rol === 'supervisor')) html = vistaListaNegra();
+    else if (App.activeTab === 'link-auditoria' && rol === 'admin') html = vistaAuditoria();
+    else html = vistaRegistroForm();
+    document.getElementById('main-container').innerHTML = html;
+    if (App.activeTab === 'link-form') iniciarReloj();
+}
+
+/* =====================================================================
+   VISTA: REGISTRO (formulario de ingreso)
+   ===================================================================== */
+function vistaRegistroForm() {
+    return '' +
+    '<div class="view-container active">' +
+    '<section class="card border-top-orange">' +
+    '<div class="card-header"><h3>Módulo de Registro de Control de Acceso</h3><span class="badge-time">🕒 <span id="reloj-actual">Cargando...</span></span></div>' +
+    '<form id="form-registro" class="mt-25" onsubmit="App.crearRegistro(event); return false;">' +
+    '<h4 class="section-title">Datos de la Persona y Movimiento</h4>' +
+    '<div class="grid-form col-2">' +
+        campoTexto('reg-conductor', 'Nombre del conductor *', 'Ej: Juan Daniel García Treviño', true, 30) +
+        '<div class="input-group"><label for="reg-rut">RUT</label>' +
+        '<input type="text" id="reg-rut" required maxlength="12" placeholder="Ej: 12.345.678-9" oninput="App.onRutInput(this)">' +
+        '<p class="hint-warning" id="reg-rut-hint">⚠️ Este RUT no parece válido, revísalo.</p></div>' +
+        '<div class="input-group"><label for="reg-telefono">Teléfono</label>' +
+        '<input type="tel" id="reg-telefono" required maxlength="16" placeholder="Ej: +56 9 1234 5678" oninput="App.onTelefonoInput(this)"></div>' +
+        campoTexto('reg-acompanantes', 'Acompañante(s)', 'Ej: Pedro Lagos', false, 30) +
+        campoTexto('reg-procedencia', 'Procedencia', 'Ej: Centro de Distribución Sur', false, 30) +
+        campoSelect('reg-motivo', 'Motivo *', MOTIVOS, 'Entrega de mercadería') +
+    '</div>' +
+    '<h4 class="section-title mt-30">Datos del Vehículo</h4>' +
+    '<div class="grid-form col-3">' +
+        '<div class="input-group"><label for="reg-patente">Patente *</label>' +
+        '<input type="text" id="reg-patente" required class="uppercase" maxlength="10" placeholder="Ej: ABCD12" oninput="App.onPatenteInput(this)">' +
+        '<p class="hint-warning" id="reg-patente-hint"></p></div>' +
+        campoSelect('reg-tipo', 'Tipo *', TIPOS, 'Camión') +
+        campoTexto('reg-marca', 'Marca / Modelo', 'Ej: Kia Frontier', true, 30) +
+    '</div>' +
+    '<div class="photo-upload mt-25">' +
+        '<label>📷 Fotografía (Opcional)</label>' +
+        '<input type="file" accept="image/*" id="reg-foto" onchange="App.onFotoChange(this)">' +
+        '<img id="reg-foto-preview" class="photo-preview" alt="Vista previa">' +
+    '</div>' +
+    '<button type="submit" class="btn-primary mt-25">Registrar movimiento</button>' +
+    '</form></section></div>';
+}
+function campoTexto(id, label, placeholder, required, maxlen) {
+    return '<div class="input-group"><label for="' + id + '">' + esc(label) + '</label>' +
+        '<input type="text" id="' + id + '" placeholder="' + esc(placeholder) + '"' + (required ? ' required' : '') + (maxlen ? ' maxlength="' + maxlen + '"' : '') + '></div>';
+}
+function campoSelect(id, label, opciones, def) {
+    return '<div class="input-group"><label for="' + id + '">' + esc(label) + '</label><select id="' + id + '">' +
+        opciones.map(o => '<option value="' + esc(o) + '"' + (o === def ? ' selected' : '') + '>' + esc(o) + '</option>').join('') +
+        '</select></div>';
+}
+
+let relojInterval = null;
+function iniciarReloj() {
+    if (relojInterval) clearInterval(relojInterval);
+    const tick = () => { const el = document.getElementById('reloj-actual'); if (el) el.textContent = new Date().toLocaleString('es-CL'); else clearInterval(relojInterval); };
+    tick();
+    relojInterval = setInterval(tick, 1000);
+}
+
+App.onRutInput = function (input) {
+    const cursor = input.selectionStart;
+    const antes = input.value.length;
+    input.value = formatearRutVisual(input.value);
+    const despues = input.value.length;
+    input.selectionStart = input.selectionEnd = Math.max(0, cursor + (despues - antes));
+    const hint = document.getElementById(input.id === 'reg-rut' ? 'reg-rut-hint' : 'edit-rut-hint');
+    if (hint) {
+        const invalido = input.value.trim().length >= 8 && !validarRut(input.value);
+        hint.classList.toggle('show', invalido);
+    }
+};
+App.onTelefonoInput = function (input) { input.value = formatearTelefonoVisual(input.value); };
+App.onPatenteInput = function (input) {
+    input.value = input.value.toUpperCase();
+    const norm = normalizarPatente(input.value);
+    const bloqueada = patentesBloqueadas.find(p => p.patente === norm);
+    const hint = document.getElementById('reg-patente-hint');
+    if (hint) {
+        if (bloqueada) { hint.textContent = '⚠️ Lista negra: ' + bloqueada.motivo; hint.classList.add('show'); }
+        else { hint.textContent = ''; hint.classList.remove('show'); }
+    }
+};
+App.onFotoChange = function (input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+        const img = document.getElementById('reg-foto-preview');
+        img.src = ev.target.result;
+        img.classList.add('show');
+        img.dataset.base64 = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+};
+
+App.crearRegistro = function (e) {
+    const rut = document.getElementById('reg-rut').value.trim();
+    if (!validarRut(rut)) { mostrarToast('El RUT ingresado no es válido. Revísalo antes de continuar.', 'error'); return; }
+    const patente = normalizarPatente(document.getElementById('reg-patente').value);
+    const fotoImg = document.getElementById('reg-foto-preview');
+    const datos = {
+        id: ++contadorRegistro,
+        conductor: document.getElementById('reg-conductor').value.trim(),
+        rut: rut,
+        telefono: document.getElementById('reg-telefono').value.trim(),
+        acompanantes: document.getElementById('reg-acompanantes').value.trim(),
+        procedencia: document.getElementById('reg-procedencia').value.trim(),
+        motivo: document.getElementById('reg-motivo').value,
+        patente: patente,
+        tipo: document.getElementById('reg-tipo').value,
+        marca: document.getElementById('reg-marca').value.trim(),
+        foto: fotoImg && fotoImg.classList.contains('show') ? fotoImg.dataset.base64 : '',
+        creadoPor: App.session.usuario,
+        fecha: new Date().toISOString(),
+        fechaSalida: null,
+        editNote: '', editadoPor: '', fechaEdicion: null,
+    };
+    registros.unshift(datos);
+    const bloqueada = patentesBloqueadas.find(p => p.patente === patente);
+    if (bloqueada) mostrarToast('Registrado, pero ⚠️ esta patente está en la lista negra: ' + bloqueada.motivo, 'error');
+    else mostrarToast('Movimiento registrado exitosamente.', 'ok');
+    renderMain();
+    iniciarReloj();
+};
+
+/* =====================================================================
+   VISTA: REPORTES
+   ===================================================================== */
+function filtrarRegistros(filtros) {
+    let list = registros.slice();
+    if (filtros.q) {
+        const q = filtros.q.toLowerCase();
+        list = list.filter(r => r.conductor.toLowerCase().includes(q) || r.patente.toLowerCase().includes(q) || r.rut.toLowerCase().includes(q));
+    }
+    if (filtros.motivo) list = list.filter(r => r.motivo === filtros.motivo);
+    if (filtros.desde) list = list.filter(r => new Date(r.fecha) >= new Date(filtros.desde + 'T00:00:00'));
+    if (filtros.hasta) list = list.filter(r => new Date(r.fecha) <= new Date(filtros.hasta + 'T23:59:59'));
+    list.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+    return list;
+}
+function paginar(arr, pagina, porPagina) {
+    const total = arr.length;
+    const totalPaginas = Math.max(1, Math.ceil(total / porPagina));
+    const p = Math.min(Math.max(1, pagina), totalPaginas);
+    const start = (p - 1) * porPagina;
+    return { items: arr.slice(start, start + porPagina), pagina: p, totalPaginas: totalPaginas, total: total };
+}
+
+function vistaReportes() {
+    const filtrados = filtrarRegistros(App.regFiltros);
+    const total = filtrados.length;
+    const dentro = filtrados.filter(r => !r.fechaSalida).length;
+    const conFoto = filtrados.filter(r => r.foto).length;
+    const enAlerta = filtrados.filter(r => !r.fechaSalida && horasDesde(r.fecha) >= App.umbralHoras).length;
+    let ultimaAccion = '-';
+    if (App.regPagina === 1 && filtrados.length > 0) {
+        const u = filtrados[0];
+        const creador = usuarios.find(x => x.usuario === u.creadoPor);
+        ultimaAccion = (creador ? creador.nombre : u.creadoPor) + ' (' + (creador ? creador.rol : 'Rol desconocido') + ') - ' + fmtFecha(u.fecha);
+    }
+    const pag = paginar(filtrados, App.regPagina, App.regPorPagina);
+    const rol = App.session.rol;
+
+    const panel = '<section class="card border-top-orange">' +
+        '<div class="card-header"><h3>Panel de Reportes (' + (rol === 'admin' ? 'Administrador' : rol === 'supervisor' ? 'Supervisor' : 'Operador') + ')</h3></div>' +
+        '<div class="grid-form col-5 mt-15 mini-stat-grid">' +
+        '<div class="card"><h4>Total registros</h4><p>' + total + '</p></div>' +
+        '<div class="card"><h4>Actualmente dentro</h4><p>' + dentro + '</p></div>' +
+        '<div class="card ' + (enAlerta > 0 ? 'alerta-card' : '') + '"><h4>En alerta ⚠️</h4><p>' + enAlerta + '</p></div>' +
+        '<div class="card"><h4>Con foto</h4><p>' + conFoto + '</p></div>' +
+        '<div class="card"><h4>Última acción</h4><p style="font-size:13px;">' + esc(ultimaAccion) + '</p></div>' +
+        '</div>' +
+        '<div class="mt-15"><label style="font-size:13px;">Alertar cuando un vehículo lleve más de ' +
+        '<input type="number" min="1" value="' + App.umbralHoras + '" style="width:55px; text-align:center;" onchange="App.cambiarUmbral(this.value)"> horas dentro</label></div>' +
+        '</section>';
+
+    if (App.editingId) {
+        const reg = registros.find(r => r.id === App.editingId);
+        return '<div class="view-container active">' + panel + formularioEdicion(reg) + '</div>';
+    }
+
+    return '<div class="view-container active">' + panel +
+        '<section class="card mt-15">' +
+        '<div class="card-header"><h3>Historial de Movimientos</h3>' + exportarMenuHtml() + '</div>' +
+        filtrosRegistrosHtml() +
+        tablaRegistrosHtml(pag.items, rol) +
+        paginacionHtml(pag.pagina, pag.totalPaginas, pag.total, 'App.irAPaginaReg') +
+        '</section></div>';
+}
+
+function filtrosRegistrosHtml() {
+    const f = App.regFiltros;
+    return '<form class="grid-form col-4" onsubmit="App.buscarRegistros(event); return false;">' +
+        '<div class="input-group"><label>Buscar (conductor, patente o RUT)</label><input type="text" id="filtro-q" value="' + esc(f.q || '') + '" placeholder="Ej: Juan o ABCD12"></div>' +
+        '<div class="input-group"><label>Motivo</label><select id="filtro-motivo"><option value="">Todos</option>' +
+        MOTIVOS.slice(0, 5).map(m => '<option value="' + esc(m) + '"' + (f.motivo === m ? ' selected' : '') + '>' + esc(m) + '</option>').join('') + '</select></div>' +
+        '<div class="input-group"><label>Desde</label><input type="date" id="filtro-desde" value="' + (f.desde || '') + '"></div>' +
+        '<div class="input-group"><label>Hasta</label><input type="date" id="filtro-hasta" value="' + (f.hasta || '') + '"></div>' +
+        '<div style="grid-column:1/-1; display:flex; gap:10px;">' +
+        '<button type="submit" class="btn-primary">Buscar</button>' +
+        '<button type="button" class="btn-outline-dark" onclick="App.limpiarFiltrosRegistros()">Limpiar filtros</button>' +
+        '</div></form>';
+}
+App.buscarRegistros = function () {
+    App.regFiltros = { q: document.getElementById('filtro-q').value.trim(), motivo: document.getElementById('filtro-motivo').value, desde: document.getElementById('filtro-desde').value, hasta: document.getElementById('filtro-hasta').value };
+    App.regPagina = 1;
+    renderMain();
+};
+App.limpiarFiltrosRegistros = function () { App.regFiltros = {}; App.regPagina = 1; renderMain(); };
+App.irAPaginaReg = function (n) { App.regPagina = n; renderMain(); };
+App.cambiarUmbral = function (v) { App.umbralHoras = Math.max(1, Number(v) || 1); renderMain(); };
+
+function tablaRegistrosHtml(lista, rol) {
+    const mostrarAcciones = rol === 'admin' || rol === 'supervisor';
+    const cols = ['Entrada', 'Salida', 'Conductor', 'RUT', 'Teléfono', 'Acompañantes', 'Motivo', 'Procedencia', 'Patente', 'Tipo', 'Marca', 'Foto', 'Creado por', 'Nota de edición', 'Última edición'];
+    if (mostrarAcciones) cols.push('Acciones');
+    let filas = lista.map(reg => {
+        const enAlertaFila = !reg.fechaSalida && horasDesde(reg.fecha) >= App.umbralHoras;
+        const editor = usuarios.find(u => u.usuario === reg.editadoPor);
+        let salidaCell;
+        if (reg.fechaSalida) {
+            salidaCell = esc(fmtFecha(reg.fechaSalida)) + ((rol === 'admin' || rol === 'supervisor') ?
+                ' <button class="btn-small btn-secondary" onclick="App.deshacerSalida(' + reg.id + ')">Deshacer</button>' : '');
+        } else {
+            salidaCell = (enAlertaFila ? '<div class="text-danger font-bold" style="font-size:12px; margin-bottom:4px;">⚠️ Dentro hace ' + horasDesde(reg.fecha).toFixed(1) + ' h</div>' : '') +
+                '<button class="btn-small btn-success" onclick="App.marcarSalida(' + reg.id + ')">Marcar salida</button>';
+        }
+        let accionesCell = '';
+        if (mostrarAcciones) {
+            accionesCell = '<td>';
+            if (rol === 'admin' || rol === 'supervisor') accionesCell += '<button class="btn-small btn-info" onclick="App.editarRegistro(' + reg.id + ')">Editar</button> ';
+            if (rol === 'admin') accionesCell += '<button class="btn-small btn-danger" onclick="App.eliminarRegistro(' + reg.id + ')">Eliminar</button>';
+            accionesCell += '</td>';
+        }
+        return '<tr class="' + (enAlertaFila ? 'row-alerta' : '') + '">' +
+            '<td>' + esc(fmtFecha(reg.fecha)) + '</td>' +
+            '<td>' + salidaCell + '</td>' +
+            '<td class="td-main" style="cursor:pointer; text-decoration:underline;" onclick="App.verConductor(\'' + esc(reg.rut) + '\')">' + esc(reg.conductor) + '</td>' +
+            '<td>' + esc(reg.rut) + '</td>' +
+            '<td>' + esc(reg.telefono || '-') + '</td>' +
+            '<td>' + esc(reg.acompanantes || '-') + '</td>' +
+            '<td>' + esc(reg.motivo) + '</td>' +
+            '<td>' + esc(reg.procedencia || '-') + '</td>' +
+            '<td class="td-main uppercase">' + esc(reg.patente) + '</td>' +
+            '<td>' + esc(reg.tipo) + '</td>' +
+            '<td>' + esc(reg.marca || '-') + '</td>' +
+            '<td>' + (reg.foto ? '<img src="' + reg.foto + '" class="img-thumbnail" onclick="App.verFoto(this.src)" alt="Foto">' : 'Sin foto') + '</td>' +
+            '<td class="text-muted">' + esc(reg.creadoPor) + '</td>' +
+            '<td class="text-muted">' + esc(reg.editNote || '-') + '</td>' +
+            '<td class="text-muted">' + (reg.fechaEdicion ? '<b>' + esc(editor ? editor.nombre : reg.editadoPor) + '</b><br>' + esc(fmtFecha(reg.fechaEdicion)) : 'Sin edición') + '</td>' +
+            accionesCell + '</tr>';
+    }).join('');
+    if (lista.length === 0) filas = '<tr><td colspan="' + cols.length + '" class="text-muted" style="text-align:center;">No hay registros que coincidan con estos filtros.</td></tr>';
+    return '<div class="top-scrollbar-container"><div style="height:1px;"></div></div>' +
+        '<div class="table-responsive"><table class="table-primary"><thead><tr>' +
+        cols.map(c => '<th>' + c + '</th>').join('') + '</tr></thead><tbody>' + filas + '</tbody></table></div>';
+}
+function paginacionHtml(pagina, totalPaginas, total, fn) {
+    if (totalPaginas <= 1) return '';
+    return '<div class="mt-15" style="display:flex; align-items:center; justify-content:center; gap:15px;">' +
+        '<button class="btn-outline-dark" ' + (pagina <= 1 ? 'disabled' : '') + ' onclick="' + fn + '(' + (pagina - 1) + ')">← Anterior</button>' +
+        '<span style="font-size:14px;">Página ' + pagina + ' de ' + totalPaginas + ' (' + total + ' registro' + (total === 1 ? '' : 's') + ' en total)</span>' +
+        '<button class="btn-outline-dark" ' + (pagina >= totalPaginas ? 'disabled' : '') + ' onclick="' + fn + '(' + (pagina + 1) + ')">Siguiente →</button>' +
+        '</div>';
+}
+
+App.marcarSalida = function (id) {
+    const reg = registros.find(r => r.id === id);
+    if (!reg) return;
+    reg.fechaSalida = new Date().toISOString();
+    mostrarToast('Salida registrada para ' + reg.conductor + '.', 'ok');
+    renderMain();
+};
+App.deshacerSalida = function (id) {
+    const reg = registros.find(r => r.id === id);
+    if (!reg) return;
+    reg.fechaSalida = null;
+    mostrarToast('Salida deshecha para ' + reg.conductor + '.', 'ok');
+    renderMain();
+};
+App.eliminarRegistro = function (id) {
+    const reg = registros.find(r => r.id === id);
+    if (!reg) return;
+    if (!confirm('¿Eliminar el registro de "' + reg.conductor + '" (patente ' + reg.patente + ')? Esta acción no se puede deshacer.')) return;
+    registros = registros.filter(r => r.id !== id);
+    registrarAuditoria('registro_eliminado', App.session.usuario, 'Registro de ' + reg.conductor + ' (patente ' + reg.patente + ') eliminado');
+    mostrarToast('Registro eliminado.', 'ok');
+    renderMain();
+};
+App.editarRegistro = function (id) { App.editingId = id; renderMain(); };
+
+function formularioEdicion(reg) {
+    return '<section class="card mt-15"><div class="card-header"><h3>Editar Registro</h3></div>' +
+        '<form class="mt-25" onsubmit="App.guardarEdicion(event, ' + reg.id + '); return false;">' +
+        '<div class="grid-form col-2">' +
+        '<div class="input-group"><label>Nombre del conductor</label><input type="text" id="edit-conductor" value="' + esc(reg.conductor) + '"></div>' +
+        '<div class="input-group"><label>RUT</label><input type="text" id="edit-rut" value="' + esc(reg.rut) + '" oninput="App.onRutInput(this)"><p class="hint-warning" id="edit-rut-hint">⚠️ Este RUT no parece válido, revísalo.</p></div>' +
+        '<div class="input-group"><label>Teléfono</label><input type="text" id="edit-telefono" value="' + esc(reg.telefono) + '" oninput="App.onTelefonoInput(this)"></div>' +
+        '<div class="input-group"><label>Acompañantes</label><input type="text" id="edit-acompanantes" value="' + esc(reg.acompanantes) + '"></div>' +
+        '<div class="input-group"><label>Procedencia</label><input type="text" id="edit-procedencia" value="' + esc(reg.procedencia) + '"></div>' +
+        campoSelect('edit-motivo', 'Motivo', MOTIVOS, reg.motivo) +
+        '</div>' +
+        '<h4 class="section-title mt-30">Datos del Vehículo</h4>' +
+        '<div class="grid-form col-3">' +
+        '<div class="input-group"><label>Patente</label><input type="text" id="edit-patente" value="' + esc(reg.patente) + '" class="uppercase"></div>' +
+        campoSelect('edit-tipo', 'Tipo', TIPOS, reg.tipo) +
+        '<div class="input-group"><label>Marca / Modelo</label><input type="text" id="edit-marca" value="' + esc(reg.marca) + '"></div>' +
+        '</div>' +
+        '<div class="input-group mt-15"><label>Nota de edición</label><input type="text" id="edit-note" placeholder="Ej: se corrigió patente mal digitada"></div>' +
+        '<button type="submit" class="btn-primary mt-25">Guardar cambios</button>' +
+        '<button type="button" class="btn-outline-dark mt-25" style="margin-left:10px;" onclick="App.cancelarEdicion()">Cancelar</button>' +
+        '</form></section>';
+}
+App.guardarEdicion = function (e, id) {
+    const rut = document.getElementById('edit-rut').value.trim();
+    if (!validarRut(rut)) { mostrarToast('El RUT ingresado no es válido. Revísalo antes de continuar.', 'error'); return; }
+    const reg = registros.find(r => r.id === id);
+    if (!reg) return;
+    reg.conductor = document.getElementById('edit-conductor').value.trim();
+    reg.rut = rut;
+    reg.telefono = document.getElementById('edit-telefono').value.trim();
+    reg.acompanantes = document.getElementById('edit-acompanantes').value.trim();
+    reg.procedencia = document.getElementById('edit-procedencia').value.trim();
+    reg.motivo = document.getElementById('edit-motivo').value;
+    reg.patente = normalizarPatente(document.getElementById('edit-patente').value);
+    reg.tipo = document.getElementById('edit-tipo').value;
+    reg.marca = document.getElementById('edit-marca').value.trim();
+    reg.editNote = document.getElementById('edit-note').value.trim();
+    reg.editadoPor = App.session.usuario;
+    reg.fechaEdicion = new Date().toISOString();
+    App.editingId = null;
+    mostrarToast('Registro actualizado correctamente.', 'ok');
+    renderMain();
+};
+App.cancelarEdicion = function () { App.editingId = null; renderMain(); };
+
+function exportarMenuHtml() {
+    return '<div style="position:relative;">' +
+        '<button class="btn-outline-dark" onclick="App.toggleExportMenu(event)">📊 Exportar CSV ▾</button>' +
+        (App.exportMenuAbierto ?
+            '<div style="position:fixed; inset:0; z-index:1000;" onclick="App.cerrarExportMenu()"></div>' +
+            '<div class="menu-dropdown">' +
+            '<button onclick="App.exportarRegistros(\'vista-actual\')">Vista actual (con filtros aplicados)</button>' +
+            '<button onclick="App.exportarRegistros(30)">Último mes</button>' +
+            '<button onclick="App.exportarRegistros(90)">Últimos 3 meses</button>' +
+            '<button onclick="App.exportarRegistros(180)">Últimos 6 meses</button>' +
+            '<button onclick="App.exportarRegistros(365)">Último año</button>' +
+            '<button onclick="App.exportarRegistros(\'todos\')">Todos los registros</button>' +
+            '</div>' : '') + '</div>';
+}
+App.toggleExportMenu = function (e) { e.stopPropagation(); App.exportMenuAbierto = !App.exportMenuAbierto; renderMain(); };
+App.cerrarExportMenu = function () { App.exportMenuAbierto = false; renderMain(); };
+App.exportarRegistros = function (opcion) {
+    App.exportMenuAbierto = false;
+    let datos;
+    if (opcion === 'vista-actual') datos = filtrarRegistros(App.regFiltros);
+    else if (opcion === 'todos') datos = registros.slice().sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+    else datos = filtrarRegistros({ desde: new Date(Date.now() - opcion * 86400000).toISOString().slice(0, 10) });
+    if (datos.length === 0) { mostrarToast('No hay registros para exportar en ese rango.', 'error'); renderMain(); return; }
+    const headers = ['Entrada', 'Salida', 'Conductor', 'RUT', 'Teléfono', 'Acompañantes', 'Motivo', 'Procedencia', 'Patente', 'Tipo', 'Marca', 'Tiene foto', 'Creado por', 'Nota de edición', 'Editado por', 'Fecha edición'];
+    const filas = datos.map(r => {
+        const editor = usuarios.find(u => u.usuario === r.editadoPor);
+        return [fmtFecha(r.fecha), fmtFecha(r.fechaSalida), r.conductor, r.rut, r.telefono, r.acompanantes, r.motivo, r.procedencia, r.patente, r.tipo, r.marca, r.foto ? 'Sí' : 'No', r.creadoPor, r.editNote, r.fechaEdicion ? (editor ? editor.nombre : r.editadoPor) : '', fmtFecha(r.fechaEdicion)];
+    });
+    descargarCSV(construirCSV(headers, filas), 'historial');
+    mostrarToast('CSV descargado.', 'ok');
+    renderMain();
+};
+
+App.verFoto = function (src) { App.fotoModalSrc = src; renderModal(); };
+App.verConductor = function (rut) { App.rutSeleccionado = rut; renderModal(); };
+
+/* =====================================================================
+   VISTA: LISTA NEGRA
+   ===================================================================== */
+function vistaListaNegra() {
+    const filas = patentesBloqueadas.map(p =>
+        '<tr><td class="td-main uppercase">' + esc(p.patente) + '</td><td>' + esc(p.motivo) + '</td>' +
+        '<td class="text-muted">' + esc(p.agregadoPor) + '</td><td class="text-muted">' + esc(fmtFecha(p.fechaAgregado)) + '</td>' +
+        '<td><button class="btn-small btn-danger" onclick="App.quitarPatente(' + p.id + ')">Quitar</button></td></tr>'
+    ).join('') || '<tr><td colspan="5" class="text-muted" style="text-align:center;">No hay patentes en la lista negra.</td></tr>';
+
+    return '<div class="view-container active">' +
+        '<section class="card border-top-orange"><div class="card-header"><h3>Agregar Patente a la Lista Negra</h3></div>' +
+        '<form class="mt-25" onsubmit="App.agregarPatente(event); return false;">' +
+        '<div class="grid-form col-2">' +
+        '<div class="input-group"><label>Patente *</label><input type="text" id="lm-patente" required class="uppercase" maxlength="10" placeholder="Ej: ABCD12"></div>' +
+        '<div class="input-group"><label>Motivo *</label><input type="text" id="lm-motivo" required maxlength="255" placeholder="Ej: Incidente de seguridad 03/2026"></div>' +
+        '</div><button type="submit" class="btn-primary mt-25">Agregar a la lista negra</button></form></section>' +
+        '<section class="card mt-15"><div class="card-header"><h3>Patentes en la Lista Negra</h3></div>' +
+        '<div class="top-scrollbar-container"><div style="height:1px;"></div></div>' +
+        '<div class="table-responsive"><table class="table-primary"><thead><tr><th>Patente</th><th>Motivo</th><th>Agregado por</th><th>Fecha</th><th>Acciones</th></tr></thead><tbody>' + filas + '</tbody></table></div>' +
+        '</section></div>';
+}
+App.agregarPatente = function () {
+    const patente = normalizarPatente(document.getElementById('lm-patente').value);
+    const motivo = document.getElementById('lm-motivo').value.trim();
+    if (patentesBloqueadas.some(p => p.patente === patente)) { mostrarToast('Esa patente ya está en la lista negra.', 'error'); return; }
+    patentesBloqueadas.push({ id: ++contadorPatente, patente: patente, motivo: motivo, agregadoPor: App.session.usuario, fechaAgregado: new Date().toISOString() });
+    registrarAuditoria('patente_bloqueada', App.session.usuario, 'Patente ' + patente + ' — ' + motivo);
+    mostrarToast('Patente agregada a la lista negra.', 'ok');
+    renderMain();
+};
+App.quitarPatente = function (id) {
+    const item = patentesBloqueadas.find(p => p.id === id);
+    if (!item) return;
+    if (!confirm('¿Quitar la patente "' + item.patente + '" de la lista negra?')) return;
+    patentesBloqueadas = patentesBloqueadas.filter(p => p.id !== id);
+    registrarAuditoria('patente_desbloqueada', App.session.usuario, 'Patente ' + item.patente + ' retirada de la lista negra');
+    mostrarToast('Patente quitada de la lista negra.', 'ok');
+    renderMain();
+};
+
+/* =====================================================================
+   VISTA: USUARIOS (admin)
+   ===================================================================== */
+function estaBloqueado(u) { return u.bloqueadoHasta && new Date(u.bloqueadoHasta) > new Date(); }
+
+function vistaUsuarios() {
+    const filas = usuarios.map(u => {
+        const bloqueado = estaBloqueado(u);
+        let acciones = '';
+        if (bloqueado) acciones += '<button class="btn-small btn-secondary" onclick="App.desbloquearUsuario(\'' + u.usuario + '\')">Desbloquear</button> ';
+        acciones += '<button class="btn-small btn-info" onclick="App.abrirModal({tipo:\'reset\', usuario:\'' + u.usuario + '\'})">Resetear clave</button> ';
+        acciones += '<button class="btn-small btn-secondary" onclick="App.cerrarSesionesDe(\'' + u.usuario + '\')">Cerrar sesiones</button> ';
+        acciones += u.usuario !== 'admin' ? '<button class="btn-small btn-danger" onclick="App.eliminarUsuario(\'' + u.usuario + '\')">Eliminar</button>' : '<span class="text-muted">No eliminable</span>';
+        return '<tr><td>' + esc(u.nombre) + '</td><td><b>' + esc(u.usuario) + '</b></td><td class="uppercase">' + esc(u.rol) + '</td>' +
+            '<td>' + (bloqueado ? '<span class="locked-badge">🔒 Bloqueado hasta ' + new Date(u.bloqueadoHasta).toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' }) + '</span>' : '<span class="active-badge">✅ Activo</span>') + '</td>' +
+            '<td>' + acciones + '</td></tr>';
+    }).join('');
+
+    return '<div class="view-container active">' +
+        '<section class="card border-top-orange"><div class="card-header"><h3>Gestión de Usuarios</h3></div>' +
+        '<form class="mt-25" onsubmit="App.crearUsuario(event); return false;">' +
+        '<div class="grid-form col-2">' +
+        '<div class="input-group full-width"><label>Nombre Completo *</label><input type="text" id="us-nombre" required autocomplete="off"></div>' +
+        '<div class="input-group"><label>Nombre de Usuario *</label><input type="text" id="us-usuario" required autocomplete="off"></div>' +
+        '<div class="input-group"><label>Contraseña *</label><div style="display:flex; gap:5px;">' +
+        '<input type="password" id="us-clave" required autocomplete="off" style="width:100%;">' +
+        '<button type="button" class="btn-outline-dark" onclick="App.togglePassVisibility(\'us-clave\', this)" style="padding:0 12px;">👁️</button></div></div>' +
+        '<div class="input-group full-width"><label>Rol del Sistema *</label><select id="us-rol"><option value="operador">Operador</option><option value="supervisor">Supervisor</option><option value="admin">Administrador</option></select></div>' +
+        '</div><button type="submit" class="btn-primary mt-25" style="width:100%;">Registrar usuario</button></form></section>' +
+        '<section class="card mt-15"><div class="card-header"><h3>Usuarios Registrados</h3></div>' +
+        '<div class="top-scrollbar-container"><div style="height:1px;"></div></div>' +
+        '<div class="table-responsive"><table class="table-primary"><thead><tr><th>Nombre</th><th>Usuario</th><th>Rol</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>' + filas + '</tbody></table></div>' +
+        '</section></div>';
+}
+App.togglePassVisibility = function (id, btn) {
+    const input = document.getElementById(id);
+    const show = input.type === 'password';
+    input.type = show ? 'text' : 'password';
+    btn.textContent = show ? '🙈' : '👁️';
+};
+App.crearUsuario = function () {
+    const usuario = document.getElementById('us-usuario').value.trim().toLowerCase();
+    if (usuarios.some(u => u.usuario === usuario)) { mostrarToast('Ya existe un usuario con ese nombre.', 'error'); return; }
+    const nombre = document.getElementById('us-nombre').value.trim();
+    const rol = document.getElementById('us-rol').value;
+    usuarios.push({ usuario: usuario, nombre: nombre, clave: document.getElementById('us-clave').value.trim(), rol: rol, bloqueadoHasta: null });
+    registrarAuditoria('usuario_creado', App.session.usuario, 'Usuario ' + usuario + ' (' + rol.charAt(0).toUpperCase() + rol.slice(1) + ') creado');
+    mostrarToast('Usuario creado correctamente.', 'ok');
+    renderMain();
+};
+App.eliminarUsuario = function (usuario) {
+    if (!confirm('¿Eliminar al usuario "' + usuario + '"? Esta acción no se puede deshacer.')) return;
+    usuarios = usuarios.filter(u => u.usuario !== usuario);
+    registrarAuditoria('usuario_eliminado', App.session.usuario, 'Usuario ' + usuario + ' eliminado');
+    mostrarToast('Usuario eliminado.', 'ok');
+    renderMain();
+};
+App.desbloquearUsuario = function (usuario) {
+    const u = usuarios.find(x => x.usuario === usuario);
+    if (!u) return;
+    u.bloqueadoHasta = null;
+    registrarAuditoria('cuenta_desbloqueada', App.session.usuario, 'Cuenta de ' + usuario + ' desbloqueada');
+    mostrarToast('Cuenta de ' + usuario + ' desbloqueada.', 'ok');
+    renderMain();
+};
+App.cerrarSesionesDe = function (usuario) {
+    if (!confirm('¿Cerrar la sesión de "' + usuario + '" en todos sus dispositivos? Tendrá que iniciar sesión de nuevo.')) return;
+    registrarAuditoria('sesiones_cerradas', App.session.usuario, 'Sesiones de ' + usuario + ' cerradas en todos los dispositivos');
+    mostrarToast('Se cerró la sesión de ' + usuario + ' en todos sus dispositivos.', 'ok');
+    renderMain();
+};
+
+/* =====================================================================
+   VISTA: AUDITORÍA (admin)
+   ===================================================================== */
+function filtrarAuditoria(filtros) {
+    let list = auditoria.slice();
+    if (filtros.q) {
+        const q = filtros.q.toLowerCase();
+        list = list.filter(a => a.usuario.toLowerCase().includes(q) || (a.detalle || '').toLowerCase().includes(q));
+    }
+    if (filtros.accion) list = list.filter(a => a.accion === filtros.accion);
+    if (filtros.desde) list = list.filter(a => new Date(a.fecha) >= new Date(filtros.desde + 'T00:00:00'));
+    if (filtros.hasta) list = list.filter(a => new Date(a.fecha) <= new Date(filtros.hasta + 'T23:59:59'));
+    list.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+    return list;
+}
+function vistaAuditoria() {
+    const filtrados = filtrarAuditoria(App.audFiltros);
+    const pag = paginar(filtrados, App.audPagina, App.audPorPagina);
+    const f = App.audFiltros;
+    const filas = pag.items.map(e => {
+        const info = ETIQUETAS_ACCION[e.accion] || { icono: '•', label: e.accion };
+        return '<tr><td>' + esc(fmtFecha(e.fecha)) + '</td><td class="td-main">' + esc(e.usuario) + '</td><td>' + info.icono + ' ' + esc(info.label) + '</td><td>' + esc(e.detalle || '-') + '</td></tr>';
+    }).join('') || '<tr><td colspan="4" class="text-muted" style="text-align:center;">No hay acciones que coincidan con estos filtros.</td></tr>';
+
+    return '<div class="view-container active"><section class="card border-top-orange">' +
+        '<div class="card-header"><h3>Auditoría de Acciones Administrativas</h3><button class="btn-outline-dark" onclick="App.exportarAuditoria()">📊 Exportar CSV</button></div>' +
+        '<p class="text-muted mt-15" style="font-size:13px;">Incluye acciones sobre usuarios, registros y la lista negra — no incluye el día a día operativo (crear/ver registros, iniciar sesión).</p>' +
+        '<form class="grid-form col-4 mt-15" onsubmit="App.buscarAuditoria(event); return false;">' +
+        '<div class="input-group"><label>Buscar (usuario, detalle u objetivo)</label><input type="text" id="afiltro-q" value="' + esc(f.q || '') + '" placeholder="Ej: jperez"></div>' +
+        '<div class="input-group"><label>Acción</label><select id="afiltro-accion"><option value="">Todas</option>' +
+        Object.keys(ETIQUETAS_ACCION).map(k => '<option value="' + k + '"' + (f.accion === k ? ' selected' : '') + '>' + ETIQUETAS_ACCION[k].label + '</option>').join('') + '</select></div>' +
+        '<div class="input-group"><label>Desde</label><input type="date" id="afiltro-desde" value="' + (f.desde || '') + '"></div>' +
+        '<div class="input-group"><label>Hasta</label><input type="date" id="afiltro-hasta" value="' + (f.hasta || '') + '"></div>' +
+        '<div style="grid-column:1/-1; display:flex; gap:10px;"><button type="submit" class="btn-primary">Buscar</button>' +
+        '<button type="button" class="btn-outline-dark" onclick="App.limpiarFiltrosAuditoria()">Limpiar filtros</button></div></form>' +
+        '<div class="top-scrollbar-container mt-15"><div style="height:1px;"></div></div>' +
+        '<div class="table-responsive"><table class="table-primary"><thead><tr><th>Fecha</th><th>Quién</th><th>Acción</th><th>Detalle</th></tr></thead><tbody>' + filas + '</tbody></table></div>' +
+        paginacionHtml(pag.pagina, pag.totalPaginas, pag.total, 'App.irAPaginaAud') +
+        '</section></div>';
+}
+App.buscarAuditoria = function () {
+    App.audFiltros = { q: document.getElementById('afiltro-q').value.trim(), accion: document.getElementById('afiltro-accion').value, desde: document.getElementById('afiltro-desde').value, hasta: document.getElementById('afiltro-hasta').value };
+    App.audPagina = 1; renderMain();
+};
+App.limpiarFiltrosAuditoria = function () { App.audFiltros = {}; App.audPagina = 1; renderMain(); };
+App.irAPaginaAud = function (n) { App.audPagina = n; renderMain(); };
+App.exportarAuditoria = function () {
+    const datos = filtrarAuditoria(App.audFiltros);
+    if (datos.length === 0) { mostrarToast('No hay acciones para exportar con estos filtros.', 'error'); return; }
+    const filas = datos.map(a => [fmtFecha(a.fecha), a.usuario, (ETIQUETAS_ACCION[a.accion] || {}).label || a.accion, a.detalle || '']);
+    descargarCSV(construirCSV(['Fecha', 'Quién', 'Acción', 'Detalle'], filas), 'auditoria');
+    mostrarToast('CSV descargado.', 'ok');
+};
+
+/* =====================================================================
+   MODALES
+   ===================================================================== */
+function renderModal() {
+    const c = document.getElementById('modal-container');
+    let html = '';
+
+    if (App.fotoModalSrc) {
+        html += '<div class="foto-modal-overlay" onclick="App.cerrarFoto()"><span class="modal-close" onclick="App.cerrarFoto()">&times;</span><img src="' + App.fotoModalSrc + '" class="foto-modal-img" onclick="event.stopPropagation()" alt="Foto en grande"></div>';
+    }
+    if (App.rutSeleccionado) {
+        html += modalPerfilConductor(App.rutSeleccionado);
+    }
+    if (App.modal === 'clave') {
+        html += '<div class="modal-overlay" onclick="App.cerrarModal()"><div class="modal-box narrow" onclick="event.stopPropagation()">' +
+            '<h2>Cambiar Contraseña</h2><p class="text-muted mt-15" style="font-size:13px;">Los cambios de esta demo no afectan cuentas reales.</p>' +
+            '<form class="mt-25" onsubmit="App.guardarNuevaClave(event); return false;">' +
+            '<div class="input-group"><label>Contraseña actual</label><input type="password" id="cc-actual" required></div>' +
+            '<div class="input-group mt-15"><label>Nueva contraseña</label><input type="password" id="cc-nueva" required></div>' +
+            '<div class="input-group mt-15"><label>Confirmar nueva contraseña</label><input type="password" id="cc-confirmar" required></div>' +
+            '<button type="submit" class="btn-primary mt-25" style="width:100%;">Guardar</button>' +
+            '<button type="button" class="btn-outline-dark mt-15" style="width:100%;" onclick="App.cerrarModal()">Cancelar</button></form></div></div>';
+    }
+    if (App.modal === 'usuario') {
+        html += '<div class="modal-overlay" onclick="App.cerrarModal()"><div class="modal-box narrow" onclick="event.stopPropagation()">' +
+            '<h2>Cambiar Nombre de Usuario</h2><p class="text-muted mt-15" style="font-size:13px;">Actual: <b>' + esc(App.session.usuario) + '</b>. Tras el cambio deberás iniciar sesión de nuevo.</p>' +
+            '<form class="mt-25" onsubmit="App.guardarNuevoUsuario(event); return false;">' +
+            '<div class="input-group"><label>Nuevo nombre de usuario</label><input type="text" id="cu-nuevo" required></div>' +
+            '<button type="submit" class="btn-primary mt-25" style="width:100%;">Guardar</button>' +
+            '<button type="button" class="btn-outline-dark mt-15" style="width:100%;" onclick="App.cerrarModal()">Cancelar</button></form></div></div>';
+    }
+    if (App.modal && App.modal.tipo === 'reset') {
+        html += '<div class="modal-overlay" onclick="App.cerrarModal()"><div class="modal-box narrow" onclick="event.stopPropagation()">' +
+            '<h2>Resetear Clave</h2><p class="text-muted mt-15" style="font-size:13px;">Usuario: <b>' + esc(App.modal.usuario) + '</b></p>' +
+            '<form class="mt-25" onsubmit="App.guardarReseteoClave(event); return false;">' +
+            '<div class="input-group"><label>Nueva contraseña temporal</label><input type="text" id="rc-nueva" required minlength="6"></div>' +
+            '<button type="submit" class="btn-primary mt-25" style="width:100%;">Resetear</button>' +
+            '<button type="button" class="btn-outline-dark mt-15" style="width:100%;" onclick="App.cerrarModal()">Cancelar</button></form></div></div>';
+    }
+    c.innerHTML = html;
+}
+function modalPerfilConductor(rut) {
+    const visitas = registros.filter(r => r.rut === rut).sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+    const nombre = visitas[0] ? visitas[0].conductor : rut;
+    const total = visitas.length;
+    const primera = visitas.length ? visitas[visitas.length - 1].fecha : null;
+    const ultima = visitas.length ? visitas[0].fecha : null;
+    const patentes = [...new Set(visitas.map(v => v.patente))];
+    const conteo = {};
+    visitas.forEach(v => { conteo[v.motivo] = (conteo[v.motivo] || 0) + 1; });
+    const motivoFrec = Object.entries(conteo).sort((a, b) => b[1] - a[1])[0];
+    const filas = visitas.map(v => '<tr><td>' + esc(fmtFecha(v.fecha)) + '</td><td>' + (v.fechaSalida ? esc(fmtFecha(v.fechaSalida)) : 'Dentro') + '</td><td>' + esc(v.motivo) + '</td><td class="uppercase">' + esc(v.patente) + '</td></tr>').join('');
+    return '<div class="modal-overlay" onclick="App.cerrarPerfil()"><div class="modal-box" style="max-width:700px;" onclick="event.stopPropagation()">' +
+        '<h2>Historial de ' + esc(nombre) + '</h2><p class="text-muted" style="margin-top:2px;">RUT: ' + esc(rut) + '</p>' +
+        '<div class="grid-form col-3 mt-15 mini-stat-grid">' +
+        '<div class="card"><h4>Total visitas</h4><p>' + total + '</p></div>' +
+        '<div class="card"><h4>Motivo frecuente</h4><p style="font-size:14px;">' + esc(motivoFrec ? motivoFrec[0] : '-') + '</p></div>' +
+        '<div class="card"><h4>Patentes usadas</h4><p style="font-size:13px;">' + esc(patentes.join(', ') || '-') + '</p></div></div>' +
+        '<p class="text-muted mt-15" style="font-size:13px;">Primera visita: ' + esc(primera ? fmtFecha(primera) : '-') + '<br>Última visita: ' + esc(ultima ? fmtFecha(ultima) : '-') + '</p>' +
+        '<div class="table-responsive mt-15" style="max-height:300px;"><table class="table-primary"><thead><tr><th>Entrada</th><th>Salida</th><th>Motivo</th><th>Patente</th></tr></thead><tbody>' + filas + '</tbody></table></div>' +
+        '<button type="button" class="btn-outline-dark mt-15" style="width:100%;" onclick="App.cerrarPerfil()">Cerrar</button></div></div>';
+}
+App.cerrarFoto = function () { App.fotoModalSrc = null; renderModal(); };
+App.cerrarPerfil = function () { App.rutSeleccionado = null; renderModal(); };
+App.abrirModal = function (m) { App.modal = m; App.menuAbierto = false; renderNavbar(); renderModal(); };
+App.cerrarModal = function () { App.modal = null; renderModal(); };
+App.guardarNuevaClave = function () {
+    const nueva = document.getElementById('cc-nueva').value;
+    const conf = document.getElementById('cc-confirmar').value;
+    if (nueva !== conf) { mostrarToast('Las contraseñas nuevas no coinciden.', 'error'); return; }
+    const u = usuarios.find(x => x.usuario === App.session.usuario);
+    if (u) u.clave = nueva;
+    App.modal = null;
+    mostrarToast('Contraseña actualizada correctamente.', 'ok');
+    renderModal();
+};
+App.guardarNuevoUsuario = function () {
+    const nuevo = document.getElementById('cu-nuevo').value.trim().toLowerCase();
+    if (!nuevo) return;
+    if (usuarios.some(u => u.usuario === nuevo && u.usuario !== App.session.usuario)) { mostrarToast('Ese nombre de usuario ya está en uso.', 'error'); return; }
+    const u = usuarios.find(x => x.usuario === App.session.usuario);
+    if (u) u.usuario = nuevo;
+    mostrarToast('Nombre de usuario actualizado. Vuelve a iniciar sesión.', 'ok');
+    App.modal = null;
+    App.logout();
+};
+App.guardarReseteoClave = function () {
+    const nueva = document.getElementById('rc-nueva').value;
+    const objetivo = App.modal.usuario;
+    const u = usuarios.find(x => x.usuario === objetivo);
+    if (u) u.clave = nueva;
+    registrarAuditoria('clave_reseteada', App.session.usuario, 'Clave reseteada para ' + objetivo);
+    App.modal = null;
+    mostrarToast('Clave reseteada para ' + objetivo + '.', 'ok');
+    renderMain(); renderModal();
+};
+
+/* =====================================================================
+   NAVEGACIÓN, MENÚ, SESIÓN
+   ===================================================================== */
+App.cambiarTab = function (id) { App.activeTab = id; App.editingId = null; App.menuMovil = false; render(); };
+App.toggleMenu = function (e) { e.stopPropagation(); App.menuAbierto = !App.menuAbierto; renderNavbar(); };
+App.cerrarMenu = function () { App.menuAbierto = false; renderNavbar(); };
+App.toggleMenuMovil = function () { App.menuMovil = !App.menuMovil; renderNavbar(); };
+App.cerrarSesionesPropias = function () {
+    App.menuAbierto = false;
+    if (!confirm('Esto va a cerrar tu sesión en TODOS los dispositivos, incluido este. ¿Continuar?')) { renderNavbar(); return; }
+    registrarAuditoria('sesiones_cerradas', App.session.usuario, 'Sesiones propias cerradas desde el menú de cuenta');
+    App.logout();
+};
+App.logout = function () {
+    App.session = null;
+    App.activeTab = 'link-form';
+    App.regFiltros = {}; App.regPagina = 1; App.editingId = null;
+    App.audFiltros = {}; App.audPagina = 1;
+    App.menuAbierto = false; App.menuMovil = false; App.modal = null;
+    App.fotoModalSrc = null; App.rutSeleccionado = null;
+    render();
+};
+
+/* =====================================================================
+   TOASTS
+   ===================================================================== */
+function mostrarToast(mensaje, tipo) {
+    clearTimeout(App.toastTimer);
+    document.getElementById('toast-container').innerHTML =
+        '<div onclick="App.cerrarToast()" title="Clic para cerrar" style="position:fixed; bottom:24px; right:24px; z-index:2000; background-color:' + (tipo === 'error' ? '#c0392b' : '#28a745') + '; color:white; padding:14px 20px; border-radius:8px; max-width:320px; box-shadow:0 4px 12px rgba(0,0,0,0.25); cursor:pointer; font-size:14px; line-height:1.4;">' + esc(mensaje) + '</div>';
+    App.toastTimer = setTimeout(() => { document.getElementById('toast-container').innerHTML = ''; }, 3500);
+}
+App.cerrarToast = function () { clearTimeout(App.toastTimer); document.getElementById('toast-container').innerHTML = ''; };
+
+/* =====================================================================
+   LOGIN
+   ===================================================================== */
+document.getElementById('form-login').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const usuario = document.getElementById('login-usuario').value.trim().toLowerCase();
+    const clave = document.getElementById('login-clave').value.trim();
+    const errorBox = document.getElementById('login-error');
+    const u = usuarios.find(x => x.usuario === usuario);
+
+    if (u && estaBloqueado(u)) {
+        errorBox.innerHTML = '<p class="error-text">Esta cuenta está bloqueada temporalmente por intentos fallidos. Contacta a un administrador.</p>';
+        return;
+    }
+    if (!u || u.clave !== clave) {
+        errorBox.innerHTML = '<p class="error-text">Usuario o contraseña incorrectos.</p>';
+        return;
+    }
+    errorBox.innerHTML = '';
+    App.session = { usuario: u.usuario, nombre: u.nombre, rol: u.rol };
+    App.activeTab = 'link-form';
+    document.getElementById('form-login').reset();
+    render();
+});
+
+window.App = App;
+render();
+})();
+</script>
+</body>
+</html>

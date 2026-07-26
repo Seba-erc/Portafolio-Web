@@ -11,13 +11,13 @@ export const projectsData = [
   },
   {
     id: 2,
-    title: "API REST para E-Commerce",
-    shortDescription: "Arquitectura backend escalable construida con C# y .NET Core. Manejo de carrito de compras, pasarelas de pago y notificaciones automáticas.",
-    longDescription: "Una API robusta diseñada para manejar toda la lógica de negocio de una plataforma de comercio electrónico. \n\nImplementa principios de arquitectura limpia y patrones de diseño sólidos. La base de datos está gestionada con SQL Server utilizando Entity Framework Core para las consultas.\n\nCaracterísticas principales:\n- Autenticación segura con JWT\n- Gestión de usuarios y roles\n- CRUD de productos y categorías\n- Lógica de carrito de compras y procesamiento de pagos\n- Documentación con Swagger",
-    tech: ["C#", ".NET Core", "SQL Server"],
+    title: "Control de Acceso de Vehículos",
+    shortDescription: "Plataforma web para el registro y control de vehículos. Incluye panel de administración, roles de usuario y vistas de ingreso/salida.",
+    longDescription: "Este proyecto es un demo interactivo de un sistema de control de acceso vehicular.\n\nCuenta con interfaz de login, panel de recepción para registrar ingresos y salidas, y un panel de administrador para gestionar usuarios y reportes.\n\nEl diseño está optimizado para uso ágil en porterías o casetas de seguridad, con validación de formularios en tiempo real, modo oscuro y una experiencia de usuario fluida desarrollada íntegramente con tecnologías web estándar.",
+    tech: ["HTML5", "CSS3", "JavaScript", "UI/UX"],
     github: "https://github.com/Seba-erc",
-    demo: "#",
-    icon: "devicon-csharp-plain"
+    demo: "/demos/Demo-Control-Acceso-Vehiculos.html",
+    icon: "devicon-javascript-plain"
   },
   {
     id: 3,
