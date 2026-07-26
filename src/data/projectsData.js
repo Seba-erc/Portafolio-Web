@@ -11,7 +11,7 @@ export const projectsData = [
   },
   {
     id: 2,
-    title: "Control de Acceso de Vehículos",
+    title: "Sistema de Control de Acceso de Vehículos | WEB",
     shortDescription: "Plataforma web para el registro y control de vehículos. Incluye panel de administración, roles de usuario y vistas de ingreso/salida.",
     longDescription: "Este proyecto es un demo interactivo de un sistema de control de acceso vehicular.\n\nCuenta con interfaz de login, panel de recepción para registrar ingresos y salidas, y un panel de administrador para gestionar usuarios y reportes.\n\nEl diseño está optimizado para uso ágil en porterías o casetas de seguridad, con validación de formularios en tiempo real, modo oscuro y una experiencia de usuario fluida desarrollada íntegramente con tecnologías web estándar.",
     tech: ["React", "HTML5", "CSS3", "JavaScript", "MySQL", "DBeaver"],
