@@ -17,9 +17,13 @@ export default function Projects({ onViewMore }) {
               {project.title}
             </h3>
             
-            <p style={{ fontSize: '1rem', color: 'var(--text-secondary)', marginBottom: '1.5rem', flexGrow: 1, lineHeight: '1.6', zIndex: 1 }}>
-              {project.shortDescription}
-            </p>
+            {project.image ? (
+              <img src={project.image} alt={project.title} style={{ width: '100%', height: '160px', objectFit: 'cover', borderRadius: '8px', marginBottom: '1.5rem', zIndex: 1, position: 'relative', border: '1px solid rgba(255,255,255,0.1)' }} />
+            ) : (
+              <p style={{ fontSize: '1rem', color: 'var(--text-secondary)', marginBottom: '1.5rem', flexGrow: 1, lineHeight: '1.6', zIndex: 1 }}>
+                {project.shortDescription}
+              </p>
+            )}
             
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '2rem', zIndex: 1 }}>
               {project.tech.map((tech, tIndex) => (
