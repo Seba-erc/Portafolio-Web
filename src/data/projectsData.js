@@ -3,7 +3,7 @@ export const projectsData = [
     id: 1,
     title: "Portafolio Web Profesional",
     shortDescription: "",
-    image: "/images/portafolio_preview.jpg",
+    image: "/images/Pantallazo-Portafolio-web-inicio.png",
     longDescription: "Este portafolio web fue creado desde cero utilizando React y Vite para asegurar un rendimiento óptimo y tiempos de carga rápidos. \n\nEl diseño se basa en la tendencia Glassmorphism (efecto cristal) combinada con paletas de colores oscuros y acentos neón para dar un aspecto profesional y futurista. Todo el CSS es puro (Vanilla CSS) para mantener el control total sobre las animaciones y estilos responsivos.\n\nEl proyecto cuenta con un flujo de CI/CD configurado a través de GitHub Actions que despliega automáticamente el sitio en GitHub Pages cada vez que se hace un 'push' a la rama principal. Además, está enlazado a un dominio personalizado con certificado SSL gestionado por Cloudflare.",
     tech: ["React", "Vite", "CSS", "GitHub Actions"],
     github: "https://github.com/Seba-erc/Portafolio-Web",
