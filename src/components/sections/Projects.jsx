@@ -33,7 +33,7 @@ export default function Projects({ onViewMore }) {
               ))}
             </div>
             
-            <div style={{ display: 'flex', gap: '1rem', zIndex: 1 }}>
+            <div style={{ display: 'flex', gap: '1rem', zIndex: 1, marginTop: 'auto' }}>
               {/* Botón Ver Más */}
               <button onClick={() => onViewMore(project)} className="btn btn-outline" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flex: 1, justifyContent: 'center', fontSize: '0.9rem', padding: '0.6rem' }}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
