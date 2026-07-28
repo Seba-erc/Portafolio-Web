@@ -24,12 +24,14 @@ export const projectsData = [
   },
   {
     id: 3,
-    title: "App Móvil de Tareas",
-    shortDescription: "Aplicación móvil desarrollada nativamente para Android usando Kotlin. Permite sincronización offline y manejo de base de datos local.",
-    longDescription: "Aplicación móvil enfocada en la productividad y gestión del tiempo personal, desarrollada bajo los estándares de Material Design.\n\nLa aplicación utiliza Room Database para el almacenamiento local, lo que permite su funcionamiento sin conexión a internet. Implementa corrutinas de Kotlin para operaciones asíncronas fluidas y LiveData para actualizar la interfaz de usuario en tiempo real.\n\nCaracterísticas principales:\n- Creación, edición y eliminación de tareas\n- Recordatorios con notificaciones locales\n- Modo oscuro automático\n- Arquitectura MVVM",
-    tech: ["Kotlin", "Android Studio", "SQLite"],
+    urlSlug: "Sistema-Gestion-Biblioteca",
+    title: "Sistema de Gestión de Biblioteca",
+    shortDescription: "Aplicación de escritorio para la administración integral de bibliotecas, incluyendo inventario, préstamos, morosos y reportes.",
+    image: "/images/Dashboard-Biblioteca.png",
+    longDescription: "Este sistema de gestión fue desarrollado en .NET utilizando Windows Presentation Foundation (WPF) para la interfaz gráfica y SQL Server para la base de datos.\n\nEl sistema permite administrar el ciclo completo de una biblioteca: registro de lectores, catalogación de libros, control de préstamos y devoluciones, además de un módulo automático de multas para usuarios morosos.\n\nTambién incluye un Dashboard interactivo para visualizar métricas en tiempo real y un sistema de auditoría interno.",
+    tech: [".NET", "C#", "WPF", "Visual Studio", "SQL Server"],
     github: "https://github.com/Seba-erc",
-    demo: "#",
-    icon: "devicon-android-plain"
+    demo: "/demos/biblioteca/index.html",
+    icon: "devicon-csharp-plain"
   }
 ];
