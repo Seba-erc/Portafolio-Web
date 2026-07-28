@@ -30,8 +30,8 @@ export const projectsData = [
     shortDescription: "Aplicación de escritorio para la administración integral de bibliotecas, incluyendo inventario, préstamos, morosos y reportes.",
     image: "/images/Dashboard-Biblioteca.png",
     gallery: [
-      "/images/biblioteca/Dashboard.png",
       "/images/biblioteca/Inicio-Sesion.png",
+      "/images/biblioteca/Dashboard.png",
       "/images/biblioteca/Gestion-de-Libros.png",
       "/images/biblioteca/Gestion-de-Lectores.png",
       "/images/biblioteca/Prestamos-y-Reservas.png",
