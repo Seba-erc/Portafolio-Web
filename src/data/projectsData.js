@@ -44,6 +44,6 @@ export const projectsData = [
     tech: [".NET", "C#", "WPF", "Visual Studio", "MySQL"],
     github: "https://github.com/Seba-erc",
     demo: "/demos/biblioteca/index.html",
-    icon: "devicon-csharp-plain"
+    icon: "devicon-csharp-line"
   }
 ];
