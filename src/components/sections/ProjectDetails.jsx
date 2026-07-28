@@ -37,6 +37,20 @@ export default function ProjectDetails({ project, onBack }) {
           ))}
         </div>
 
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '1.5rem', zIndex: 1, position: 'relative', flexWrap: 'wrap', marginBottom: '3rem' }}>
+          <a href={project.github} target="_blank" rel="noopener noreferrer" className="btn btn-outline" style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', fontSize: '1.1rem', padding: '0.8rem 2rem' }}>
+            <i className="devicon-github-original" style={{ fontSize: '1.5rem' }}></i> Ver Código Fuente
+          </a>
+          {project.demo !== "#" && (
+            <a href={project.demo} target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', fontSize: '1.1rem', padding: '0.8rem 2rem' }}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM6.5 11.5L12 8 6.5 4.5v7Z"/>
+              </svg>
+              Visitar Demo en Vivo
+            </a>
+          )}
+        </div>
+
         <div style={{ zIndex: 1, position: 'relative', marginBottom: '4rem' }}>
           <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: 'var(--text-secondary)' }}>Sobre el proyecto</h2>
           <div style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', lineHeight: '1.8', whiteSpace: 'pre-wrap' }}>
@@ -96,19 +110,7 @@ export default function ProjectDetails({ project, onBack }) {
           </div>
         )}
 
-        <div style={{ display: 'flex', gap: '1.5rem', zIndex: 1, position: 'relative', flexWrap: 'wrap' }}>
-          <a href={project.github} target="_blank" rel="noopener noreferrer" className="btn btn-outline" style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', fontSize: '1.1rem', padding: '0.8rem 2rem' }}>
-            <i className="devicon-github-original" style={{ fontSize: '1.5rem' }}></i> Ver Código Fuente
-          </a>
-          {project.demo !== "#" && (
-            <a href={project.demo} target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', fontSize: '1.1rem', padding: '0.8rem 2rem' }}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
-                <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM6.5 11.5L12 8 6.5 4.5v7Z"/>
-              </svg>
-              Visitar Demo en Vivo
-            </a>
-          )}
-        </div>
+
       </div>
     </section>
   );
