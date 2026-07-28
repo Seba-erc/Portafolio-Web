@@ -1,6 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import Lightbox from '../ui/Lightbox';
 
 export default function ProjectDetails({ project, onBack }) {
+  const [lightboxIndex, setLightboxIndex] = useState(null);
+
   // Hacer scroll hacia arriba cuando se abre el proyecto
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -75,6 +78,7 @@ export default function ProjectDetails({ project, onBack }) {
                   key={idx} 
                   src={img} 
                   alt={`${project.title} screenshot ${idx + 1}`} 
+                  onClick={() => setLightboxIndex(idx)}
                   style={{ 
                     height: 'auto',
                     maxHeight: '350px',
@@ -86,7 +90,8 @@ export default function ProjectDetails({ project, onBack }) {
                     backgroundColor: 'rgba(0,0,0,0.3)',
                     scrollSnapAlign: 'center',
                     flexShrink: 0,
-                    boxShadow: '0 10px 20px rgba(0,0,0,0.2)'
+                    boxShadow: '0 10px 20px rgba(0,0,0,0.2)',
+                    cursor: 'pointer'
                   }} 
                 />
               ))}
@@ -110,8 +115,15 @@ export default function ProjectDetails({ project, onBack }) {
           </div>
         )}
 
-
       </div>
+
+      {lightboxIndex !== null && (
+        <Lightbox 
+          images={project.gallery} 
+          initialIndex={lightboxIndex} 
+          onClose={() => setLightboxIndex(null)} 
+        />
+      )}
     </section>
   );
 }
