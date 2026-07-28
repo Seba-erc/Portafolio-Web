@@ -59,10 +59,10 @@ export const projectsData = [
   },
   {
     id: 5,
-    urlSlug: "Pagina-Automotora",
-    title: "Página Automotora",
+    urlSlug: "Pagina-Automotora-Gestion-Vehiculos",
+    title: "Página Automotora y Gestión de Vehículos",
     shortDescription: "Próximamente...",
-    longDescription: "Espacio reservado para el proyecto Página Automotora, que introduciré más adelante.",
+    longDescription: "Espacio reservado para el proyecto Página Automotora y Gestión de Vehículos, que introduciré más adelante.",
     tech: ["React"],
     github: "#",
     demo: "#",
