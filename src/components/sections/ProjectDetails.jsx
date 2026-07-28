@@ -50,9 +50,11 @@ export default function ProjectDetails({ project, onBack }) {
             <div className="custom-scrollbar" style={{ 
               display: 'flex', 
               overflowX: 'auto', 
-              gap: '1.5rem', 
+              gap: '1rem', 
               paddingBottom: '1.5rem',
-              scrollSnapType: 'x mandatory'
+              scrollSnapType: 'x mandatory',
+              maxWidth: '100%',
+              WebkitOverflowScrolling: 'touch'
             }}>
               {project.gallery.map((img, idx) => (
                 <img 
@@ -60,12 +62,15 @@ export default function ProjectDetails({ project, onBack }) {
                   src={img} 
                   alt={`${project.title} screenshot ${idx + 1}`} 
                   style={{ 
-                    height: '350px', 
+                    height: 'auto',
+                    maxHeight: '350px',
+                    width: '85vw',
+                    maxWidth: '600px',
                     borderRadius: '12px', 
                     objectFit: 'contain',
                     border: '1px solid rgba(255,255,255,0.1)',
                     backgroundColor: 'rgba(0,0,0,0.3)',
-                    scrollSnapAlign: 'start',
+                    scrollSnapAlign: 'center',
                     flexShrink: 0,
                     boxShadow: '0 10px 20px rgba(0,0,0,0.2)'
                   }} 
@@ -74,15 +79,15 @@ export default function ProjectDetails({ project, onBack }) {
             </div>
             <style>{`
               .custom-scrollbar::-webkit-scrollbar {
-                height: 10px;
+                height: 8px;
               }
               .custom-scrollbar::-webkit-scrollbar-track {
                 background: rgba(255, 255, 255, 0.02);
-                border-radius: 5px;
+                border-radius: 4px;
               }
               .custom-scrollbar::-webkit-scrollbar-thumb {
                 background: rgba(0, 210, 255, 0.2);
-                border-radius: 5px;
+                border-radius: 4px;
               }
               .custom-scrollbar::-webkit-scrollbar-thumb:hover {
                 background: rgba(0, 210, 255, 0.4);
