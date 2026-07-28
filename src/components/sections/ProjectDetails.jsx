@@ -26,7 +26,7 @@ export default function ProjectDetails({ project, onBack }) {
 
       <div className="glass-card" style={{ padding: '3rem', position: 'relative', overflow: 'hidden' }}>
         {/* Fondo de ícono de agua gigante */}
-        <i className={`${project.icon} colored`} style={{ position: 'absolute', right: '-50px', top: '-50px', fontSize: '25rem', opacity: '0.03', transform: 'rotate(-15deg)', pointerEvents: 'none' }}></i>
+        <i className={project.icon} style={{ position: 'absolute', right: '-50px', top: '-50px', fontSize: '25rem', color: '#ffffff', opacity: '0.04', transform: 'rotate(-15deg)', pointerEvents: 'none' }}></i>
 
         <h1 style={{ fontSize: '2.5rem', marginBottom: '1.5rem', color: 'var(--text-primary)', zIndex: 1, position: 'relative' }}>
           {project.title}

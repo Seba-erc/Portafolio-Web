@@ -11,7 +11,7 @@ export default function Projects({ onViewMore }) {
           <div key={project.id} className="glass-card project-card" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden', transition: 'all 0.3s ease' }}>
             
             {/* Fondo de ícono de agua */}
-            <i className={`${project.icon} colored`} style={{ position: 'absolute', right: '-20px', bottom: '-20px', fontSize: '10rem', opacity: '0.04', transform: 'rotate(-15deg)', pointerEvents: 'none' }}></i>
+            <i className={project.icon} style={{ position: 'absolute', right: '-20px', bottom: '-20px', fontSize: '10rem', color: '#ffffff', opacity: '0.07', transform: 'rotate(-15deg)', pointerEvents: 'none' }}></i>
             
             <h3 style={{ fontSize: '1.4rem', marginBottom: '1rem', color: 'var(--text-primary)', zIndex: 1 }}>
               {project.title}
