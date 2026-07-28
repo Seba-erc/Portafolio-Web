@@ -45,5 +45,27 @@ export const projectsData = [
     github: "https://github.com/Seba-erc",
     demo: "/demos/biblioteca/index.html",
     icon: "devicon-csharp-line"
+  },
+  {
+    id: 4,
+    urlSlug: "Pagina-Sastreria",
+    title: "Página Sastrería",
+    shortDescription: "Próximamente...",
+    longDescription: "Espacio reservado para el proyecto Página Sastrería, que introduciré más adelante.",
+    tech: ["React"],
+    github: "#",
+    demo: "#",
+    icon: "devicon-react-original"
+  },
+  {
+    id: 5,
+    urlSlug: "Pagina-Automotora",
+    title: "Página Automotora",
+    shortDescription: "Próximamente...",
+    longDescription: "Espacio reservado para el proyecto Página Automotora, que introduciré más adelante.",
+    tech: ["React"],
+    github: "#",
+    demo: "#",
+    icon: "devicon-react-original"
   }
 ];
