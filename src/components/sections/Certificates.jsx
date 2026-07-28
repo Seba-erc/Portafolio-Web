@@ -16,7 +16,8 @@ export default function Certificates() {
     { title: "Gestión de Proyectos Informáticos", file: "/images/certificados/Certificado Gestión de Proyectos Informáticos.pdf" },
     { title: "Redes y Enrutamiento", file: "/images/certificados/Certificado Redes y Enrutamiento.pdf" },
     { title: "Seguridad Informática", file: "/images/certificados/Certificado Seguridad Informática.pdf" },
-    { title: "Programación Avanzada", file: null, pending: true }
+    { title: "Programación Avanzada", file: null, pending: true },
+    { title: "Excel - de Básico a Intermedio", file: null, pending: true }
   ];
 
   return (
