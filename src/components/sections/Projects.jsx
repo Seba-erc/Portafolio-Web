@@ -13,7 +13,7 @@ export default function Projects({ onViewMore }) {
             {/* Fondo de ícono de agua */}
             <i className={project.icon} style={{ position: 'absolute', right: '-20px', bottom: '-20px', fontSize: '10rem', color: '#ffffff', opacity: '0.07', transform: 'rotate(-15deg)', pointerEvents: 'none' }}></i>
             
-            <h3 style={{ fontSize: '1.4rem', marginBottom: '1rem', color: 'var(--text-primary)', zIndex: 1 }}>
+            <h3 style={{ fontSize: '1.4rem', marginBottom: '1rem', color: 'var(--text-primary)', zIndex: 1, minHeight: '3.5rem' }}>
               {project.title}
             </h3>
             
