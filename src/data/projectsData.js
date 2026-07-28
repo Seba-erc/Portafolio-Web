@@ -28,6 +28,17 @@ export const projectsData = [
     title: "Sistema de Gestión de Biblioteca",
     shortDescription: "Aplicación de escritorio para la administración integral de bibliotecas, incluyendo inventario, préstamos, morosos y reportes.",
     image: "/images/Dashboard-Biblioteca.png",
+    gallery: [
+      "/images/biblioteca/Dashboard.png",
+      "/images/biblioteca/Inicio-Sesion.png",
+      "/images/biblioteca/Gestion-de-Libros.png",
+      "/images/biblioteca/Gestion-de-Lectores.png",
+      "/images/biblioteca/Prestamos-y-Reservas.png",
+      "/images/biblioteca/Multas-y-Morosos.png",
+      "/images/biblioteca/Gestion-de-Empleados.png",
+      "/images/biblioteca/Auditoria.png",
+      "/images/biblioteca/Configuracion.png"
+    ],
     longDescription: "Este sistema de gestión fue desarrollado en .NET utilizando Windows Presentation Foundation (WPF) para la interfaz gráfica y SQL Server para la base de datos.\n\nEl sistema permite administrar el ciclo completo de una biblioteca: registro de lectores, catalogación de libros, control de préstamos y devoluciones, además de un módulo automático de multas para usuarios morosos.\n\nTambién incluye un Dashboard interactivo para visualizar métricas en tiempo real y un sistema de auditoría interno.",
     tech: [".NET", "C#", "WPF", "Visual Studio", "SQL Server"],
     github: "https://github.com/Seba-erc",

@@ -44,6 +44,53 @@ export default function ProjectDetails({ project, onBack }) {
           </div>
         </div>
 
+        {project.gallery && project.gallery.length > 0 && (
+          <div style={{ zIndex: 1, position: 'relative', marginBottom: '4rem' }}>
+            <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: 'var(--text-secondary)' }}>Galería del Sistema</h2>
+            <div className="custom-scrollbar" style={{ 
+              display: 'flex', 
+              overflowX: 'auto', 
+              gap: '1.5rem', 
+              paddingBottom: '1.5rem',
+              scrollSnapType: 'x mandatory'
+            }}>
+              {project.gallery.map((img, idx) => (
+                <img 
+                  key={idx} 
+                  src={img} 
+                  alt={`${project.title} screenshot ${idx + 1}`} 
+                  style={{ 
+                    height: '350px', 
+                    borderRadius: '12px', 
+                    objectFit: 'contain',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    backgroundColor: 'rgba(0,0,0,0.3)',
+                    scrollSnapAlign: 'start',
+                    flexShrink: 0,
+                    boxShadow: '0 10px 20px rgba(0,0,0,0.2)'
+                  }} 
+                />
+              ))}
+            </div>
+            <style>{`
+              .custom-scrollbar::-webkit-scrollbar {
+                height: 10px;
+              }
+              .custom-scrollbar::-webkit-scrollbar-track {
+                background: rgba(255, 255, 255, 0.02);
+                border-radius: 5px;
+              }
+              .custom-scrollbar::-webkit-scrollbar-thumb {
+                background: rgba(0, 210, 255, 0.2);
+                border-radius: 5px;
+              }
+              .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+                background: rgba(0, 210, 255, 0.4);
+              }
+            `}</style>
+          </div>
+        )}
+
         <div style={{ display: 'flex', gap: '1.5rem', zIndex: 1, position: 'relative', flexWrap: 'wrap' }}>
           <a href={project.github} target="_blank" rel="noopener noreferrer" className="btn btn-outline" style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', fontSize: '1.1rem', padding: '0.8rem 2rem' }}>
             <i className="devicon-github-original" style={{ fontSize: '1.5rem' }}></i> Ver Código Fuente
