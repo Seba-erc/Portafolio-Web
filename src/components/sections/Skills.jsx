@@ -9,6 +9,7 @@ export default function Skills() {
         { name: "CSS3", icon: "devicon-css3-plain", color: "#1572b6" },
         { name: "JavaScript", icon: "devicon-javascript-plain", color: "#f7df1e" },
         { name: "Node.js", icon: "devicon-nodejs-plain", color: "#339933" },
+        { name: "React", icon: "devicon-react-original", color: "#61dafb" },
         { name: "C#", icon: "devicon-csharp-plain", color: "#9b4993" },
         { name: "TypeScript", icon: "devicon-typescript-plain", color: "#3178c6" },
         { name: "Java", icon: "devicon-java-plain", color: "#ea2d2e" },
