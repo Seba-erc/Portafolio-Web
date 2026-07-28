@@ -40,8 +40,8 @@ export const projectsData = [
       "/images/biblioteca/Auditoria.png",
       "/images/biblioteca/Configuracion.png"
     ],
-    longDescription: "Este sistema de gestión fue desarrollado en .NET utilizando Windows Presentation Foundation (WPF) para la interfaz gráfica y SQL Server para la base de datos.\n\nEl sistema permite administrar el ciclo completo de una biblioteca: registro de lectores, catalogación de libros, control de préstamos y devoluciones, además de un módulo automático de multas para usuarios morosos.\n\nTambién incluye un Dashboard interactivo para visualizar métricas en tiempo real y un sistema de auditoría interno.",
-    tech: [".NET", "C#", "WPF", "Visual Studio", "SQL Server"],
+    longDescription: "Este sistema de gestión fue desarrollado en .NET utilizando Windows Presentation Foundation (WPF) para la interfaz gráfica y MySQL para la base de datos.\n\nEl sistema permite administrar el ciclo completo de una biblioteca: registro de lectores, catalogación de libros, control de préstamos y devoluciones, además de un módulo automático de multas para usuarios morosos.\n\nTambién incluye un Dashboard interactivo para visualizar métricas en tiempo real y un sistema de auditoría interno.",
+    tech: [".NET", "C#", "WPF", "Visual Studio", "MySQL"],
     github: "https://github.com/Seba-erc",
     demo: "/demos/biblioteca/index.html",
     icon: "devicon-csharp-plain"
