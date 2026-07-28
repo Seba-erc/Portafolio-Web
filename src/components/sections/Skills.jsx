@@ -24,7 +24,7 @@ export default function Skills() {
       skills: [
         { name: "VS Code", icon: "devicon-vscode-plain", color: "#007acc" },
         { name: "Visual Studio", icon: "devicon-visualstudio-plain", color: "#5c2d91" },
-        { name: "Expo", icon: "devicon-react-original", color: "#ffffff" },
+        { name: "Expo", image: "/assets/icons/expo.svg", color: "#ffffff" },
         { name: "Android Studio", icon: "devicon-androidstudio-plain", color: "#3ddc84" },
         { name: "Apache NetBeans", icon: "devicon-apache-plain", color: "#1b6ac6" },
         { name: "Unity", image: "/assets/icons/unity-icon.svg", color: "#ffffff" },
