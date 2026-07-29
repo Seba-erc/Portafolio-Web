@@ -41,6 +41,8 @@ export default function Contact() {
         'Correo': dataObj.email,
         'Asunto': dataObj.subject,
         'Mensaje': dataObj.message,
+        'email': dataObj.email, // FormSubmit requiere obligatoriamente un campo "email" o "_replyto" válido
+        '_replyto': dataObj.email,
         '_subject': dataObj.subject || 'Nuevo mensaje del Portafolio',
         '_captcha': 'false',
         '_language': 'es', // Esto traduce el texto automático de FormSubmit
