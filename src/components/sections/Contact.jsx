@@ -39,7 +39,8 @@ export default function Contact() {
       dataObj['_subject'] = dataObj.subject || 'Nuevo mensaje del Portafolio';
       dataObj['_captcha'] = 'false';
 
-      const response = await fetch('https://formsubmit.co/ajax/sebastian31reinoso10@gmail.com', {
+      // Usamos el código seguro generado por FormSubmit en lugar del correo en texto plano
+      const response = await fetch('https://formsubmit.co/ajax/dac4c606d6e9216ab0aa2d5ba8f5cab3', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
