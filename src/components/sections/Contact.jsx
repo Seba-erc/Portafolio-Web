@@ -49,8 +49,8 @@ export default function Contact() {
         '_template': 'box' // Le da un diseño mucho más bonito al correo
       };
 
-      // Usamos el código seguro generado por FormSubmit en lugar del correo en texto plano
-      const response = await fetch('https://formsubmit.co/ajax/dac4c606d6e9216ab0aa2d5ba8f5cab3', {
+      // FormSubmit con Fetch/AJAX requiere el correo explícito, no soporta el token seguro en modo JSON
+      const response = await fetch('https://formsubmit.co/ajax/sebastian31reinoso10@gmail.com', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
