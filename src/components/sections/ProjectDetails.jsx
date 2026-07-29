@@ -1,8 +1,36 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Lightbox from '../ui/Lightbox';
 
 export default function ProjectDetails({ project, onBack }) {
   const [lightboxIndex, setLightboxIndex] = useState(null);
+  
+  // Variables de estado y referencia para el Drag-to-Scroll
+  const sliderRef = useRef(null);
+  const [isDown, setIsDown] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+
+  const handleMouseDown = (e) => {
+    setIsDown(true);
+    setIsDragging(false);
+    setStartX(e.pageX - sliderRef.current.offsetLeft);
+    setScrollLeft(sliderRef.current.scrollLeft);
+  };
+  const handleMouseLeave = () => {
+    setIsDown(false);
+  };
+  const handleMouseUp = () => {
+    setIsDown(false);
+  };
+  const handleMouseMove = (e) => {
+    if (!isDown) return;
+    e.preventDefault();
+    const x = e.pageX - sliderRef.current.offsetLeft;
+    const walk = (x - startX) * 2; // Multiplicador de velocidad de arrastre
+    if (Math.abs(walk) > 5) setIsDragging(true);
+    sliderRef.current.scrollLeft = scrollLeft - walk;
+  };
 
   // Hacer scroll hacia arriba cuando se abre el proyecto
   useEffect(() => {
@@ -64,21 +92,35 @@ export default function ProjectDetails({ project, onBack }) {
         {project.gallery && project.gallery.length > 0 && (
           <div style={{ zIndex: 1, position: 'relative', marginBottom: '4rem' }}>
             <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: 'var(--text-secondary)' }}>Galería del Sistema</h2>
-            <div className="custom-scrollbar" style={{ 
+            <div 
+              className="custom-scrollbar drag-scroll-container" 
+              ref={sliderRef}
+              onMouseDown={handleMouseDown}
+              onMouseLeave={handleMouseLeave}
+              onMouseUp={handleMouseUp}
+              onMouseMove={handleMouseMove}
+              style={{ 
               display: 'flex', 
               overflowX: 'auto', 
               gap: '1rem', 
               paddingBottom: '1.5rem',
-              scrollSnapType: 'x mandatory',
+              scrollSnapType: isDown ? 'none' : 'x mandatory',
               maxWidth: '100%',
-              WebkitOverflowScrolling: 'touch'
+              WebkitOverflowScrolling: 'touch',
+              cursor: isDown ? 'grabbing' : 'grab'
             }}>
               {project.gallery.map((img, idx) => (
                 <img 
                   key={idx} 
                   src={img} 
                   alt={`${project.title} screenshot ${idx + 1}`} 
-                  onClick={() => setLightboxIndex(idx)}
+                  onClick={(e) => {
+                    if (isDragging) {
+                      e.stopPropagation();
+                      return;
+                    }
+                    setLightboxIndex(idx);
+                  }}
                   style={{ 
                     height: 'auto',
                     maxHeight: '350px',
@@ -91,7 +133,8 @@ export default function ProjectDetails({ project, onBack }) {
                     scrollSnapAlign: 'center',
                     flexShrink: 0,
                     boxShadow: '0 10px 20px rgba(0,0,0,0.2)',
-                    cursor: 'pointer'
+                    userSelect: 'none',
+                    WebkitUserDrag: 'none'
                   }} 
                 />
               ))}
