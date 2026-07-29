@@ -60,6 +60,10 @@ export default function Contact() {
       if (response.ok) {
         setStatus('success');
         form.reset();
+        // Desaparecer el mensaje después de 4 segundos
+        setTimeout(() => {
+          setStatus('');
+        }, 4000);
       } else {
         setStatus('error');
       }
@@ -157,6 +161,8 @@ export default function Contact() {
                 id="email" 
                 name="email" 
                 required 
+                pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"
+                title={language === 'es' ? 'Por favor ingresa un correo electrónico válido (ej: nombre@dominio.com)' : 'Please enter a valid email address (e.g. name@domain.com)'}
                 style={{
                   padding: '0.8rem',
                   borderRadius: '8px',
