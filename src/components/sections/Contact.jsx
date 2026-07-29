@@ -33,11 +33,19 @@ export default function Contact() {
     
     try {
       const formData = new FormData(form);
-      // Convertir FormData a JSON
       const dataObj = Object.fromEntries(formData);
-      // Opciones adicionales para formsubmit
-      dataObj['_subject'] = dataObj.subject || 'Nuevo mensaje del Portafolio';
-      dataObj['_captcha'] = 'false';
+      
+      // Mapear los datos al español para que el correo llegue traducido
+      const spanishData = {
+        'Nombre': dataObj.name,
+        'Correo': dataObj.email,
+        'Asunto': dataObj.subject,
+        'Mensaje': dataObj.message,
+        '_subject': dataObj.subject || 'Nuevo mensaje del Portafolio',
+        '_captcha': 'false',
+        '_language': 'es', // Esto traduce el texto automático de FormSubmit
+        '_template': 'box' // Le da un diseño mucho más bonito al correo
+      };
 
       // Usamos el código seguro generado por FormSubmit en lugar del correo en texto plano
       const response = await fetch('https://formsubmit.co/ajax/dac4c606d6e9216ab0aa2d5ba8f5cab3', {
@@ -46,7 +54,7 @@ export default function Contact() {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         },
-        body: JSON.stringify(dataObj)
+        body: JSON.stringify(spanishData)
       });
       
       if (response.ok) {
