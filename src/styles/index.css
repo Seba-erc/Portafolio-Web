@@ -9,6 +9,17 @@
   --glass-border: rgba(255, 255, 255, 0.1);
   --accent-color: #6a5acd;
   --accent-hover: #8470ff;
+  --bg-color: #050505;
+}
+
+[data-theme='light'] {
+  --text-primary: #1a1a1a;
+  --text-secondary: rgba(0, 0, 0, 0.7);
+  --glass-bg: rgba(255, 255, 255, 0.5);
+  --glass-border: rgba(0, 0, 0, 0.1);
+  --accent-color: #5c4dcc;
+  --accent-hover: #725dec;
+  --bg-color: #f5f7fa;
 }
 
 * {
@@ -20,9 +31,10 @@
 body {
   font-family: 'Inter', sans-serif;
   color: var(--text-primary);
-  background-color: #050505;
+  background-color: var(--bg-color);
   overflow-x: hidden;
   line-height: 1.6;
+  transition: background-color 0.4s ease, color 0.4s ease;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -365,4 +377,41 @@ section {
   }
   
   #contacto a { word-break: break-all; }
+}
+
+/* Scroll Reveal Classes */
+.reveal-element {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-element.delay-100 { transition-delay: 100ms; }
+.reveal-element.delay-200 { transition-delay: 200ms; }
+.reveal-element.delay-300 { transition-delay: 300ms; }
+
+.reveal-element.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Timeline Responsive */
+@media (max-width: 768px) {
+  .timeline-container > div {
+    justify-content: flex-start !important;
+  }
+  .timeline-container > div > div:first-child {
+    left: 0 !important;
+    transform: translate(0, -50%) !important;
+  }
+  .timeline-container > div:first-child {
+    left: 0 !important;
+    transform: none !important;
+  }
+  .timeline-container .glass-card {
+    width: 90% !important;
+    margin-left: 2rem !important;
+    text-align: left !important;
+  }
 }

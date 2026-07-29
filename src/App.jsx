@@ -6,6 +6,7 @@ import Projects from './components/sections/Projects';
 import Certificates from './components/sections/Certificates';
 import Contact from './components/sections/Contact';
 import ProjectDetails from './components/sections/ProjectDetails';
+import FloatingButtons from './components/ui/FloatingButtons';
 import { projectsData } from './data/projectsData';
 import './styles/background.css';
 
@@ -68,9 +69,12 @@ function App() {
             <Skills />
             <Projects onViewMore={handleViewProject} />
             <Certificates />
+            <Contact />
           </main>
         </>
       )}
+
+      <FloatingButtons />
     </>
   );
 }

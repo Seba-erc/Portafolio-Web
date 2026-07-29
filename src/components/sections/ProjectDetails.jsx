@@ -1,7 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
 import Lightbox from '../ui/Lightbox';
+import { useLanguage } from '../../context/LanguageContext';
+import { useScrollReveal } from '../../hooks/useScrollReveal';
 
 export default function ProjectDetails({ project, onBack }) {
+  const { t } = useLanguage();
+  const revealRef = useScrollReveal();
   const [lightboxIndex, setLightboxIndex] = useState(null);
   
   // Variables de estado y referencia para el Drag-to-Scroll
@@ -40,19 +44,19 @@ export default function ProjectDetails({ project, onBack }) {
   if (!project) return null;
 
   return (
-    <section className="container" style={{ minHeight: '100vh', paddingTop: '6rem' }}>
+    <section className="container" ref={revealRef} style={{ minHeight: '100vh', paddingTop: '6rem' }}>
       <button 
         onClick={onBack}
-        className="btn btn-outline" 
+        className="btn btn-outline reveal-element" 
         style={{ marginBottom: '2rem', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
           <path fillRule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
         </svg>
-        Volver atrás
+        {t('details_back')}
       </button>
 
-      <div className="glass-card" style={{ padding: '3rem', position: 'relative', overflow: 'hidden' }}>
+      <div className="glass-card reveal-element delay-100" style={{ padding: '3rem', position: 'relative', overflow: 'hidden' }}>
         {/* Fondo de ícono de agua gigante */}
         <i className={project.icon} style={{ position: 'absolute', right: '-50px', top: '-50px', fontSize: '25rem', color: '#ffffff', opacity: '0.04', transform: 'rotate(-15deg)', pointerEvents: 'none' }}></i>
 
@@ -70,20 +74,20 @@ export default function ProjectDetails({ project, onBack }) {
 
         <div style={{ display: 'flex', justifyContent: 'center', gap: '1.5rem', zIndex: 1, position: 'relative', flexWrap: 'wrap', marginBottom: '3rem' }}>
           <a href={project.github} target="_blank" rel="noopener noreferrer" className="btn btn-outline" style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', fontSize: '1.1rem', padding: '0.8rem 2rem' }}>
-            <i className="devicon-github-original" style={{ fontSize: '1.5rem' }}></i> Ver Código Fuente
+            <i className="devicon-github-original" style={{ fontSize: '1.5rem' }}></i> {t('details_source')}
           </a>
           {project.demo !== "#" && (
             <a href={project.demo} target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', fontSize: '1.1rem', padding: '0.8rem 2rem' }}>
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
                 <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM6.5 11.5L12 8 6.5 4.5v7Z"/>
               </svg>
-              Visitar Demo en Vivo
+              {t('details_demo')}
             </a>
           )}
         </div>
 
         <div style={{ zIndex: 1, position: 'relative', marginBottom: '4rem' }}>
-          <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: 'var(--text-secondary)' }}>Sobre el proyecto</h2>
+          <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: 'var(--text-secondary)' }}>{t('details_about')}</h2>
           <div style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', lineHeight: '1.8', whiteSpace: 'pre-wrap' }}>
             {project.longDescription}
           </div>
@@ -91,7 +95,7 @@ export default function ProjectDetails({ project, onBack }) {
 
         {project.gallery && project.gallery.length > 0 && (
           <div style={{ zIndex: 1, position: 'relative', marginBottom: '4rem' }}>
-            <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: 'var(--text-secondary)' }}>Galería del Sistema</h2>
+            <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: 'var(--text-secondary)' }}>{t('details_gallery')}</h2>
             <div 
               className="custom-scrollbar drag-scroll-container" 
               ref={sliderRef}

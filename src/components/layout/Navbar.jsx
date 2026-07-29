@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function Navbar() {
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const { t } = useLanguage();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -28,11 +30,11 @@ export default function Navbar() {
     <nav className="smart-navbar" style={{
       transform: `translate(-50%, ${isVisible ? '0' : '-150%'})`
     }}>
-      <a href="#inicio" className="nav-link">Inicio</a>
-      <a href="#contacto" className="nav-link">Contacto</a>
-      <a href="#habilidades" className="nav-link">Habilidades</a>
-      <a href="#proyectos" className="nav-link">Proyectos</a>
-      <a href="#certificados" className="nav-link">Certificados</a>
+      <a href="#inicio" className="nav-link">{t('nav_home')}</a>
+      <a href="#habilidades" className="nav-link">{t('nav_skills')}</a>
+      <a href="#proyectos" className="nav-link">{t('nav_projects')}</a>
+      <a href="#certificados" className="nav-link">{t('nav_certificates')}</a>
+      <a href="#contacto" className="nav-link">{t('nav_contact')}</a>
     </nav>
   );
 }

@@ -1,9 +1,14 @@
 import React from 'react';
+import { useLanguage } from '../../context/LanguageContext';
+import { useScrollReveal } from '../../hooks/useScrollReveal';
 
 export default function Skills() {
+  const { t } = useLanguage();
+  const revealRef = useScrollReveal();
+  
   const skillCategories = [
     {
-      title: "Lenguajes & Frameworks",
+      title: t('skills_cat_1'),
       skills: [
         { name: "HTML5", icon: "devicon-html5-plain", color: "#e34f26" },
         { name: "CSS3", icon: "devicon-css3-plain", color: "#1572b6" },
@@ -21,7 +26,7 @@ export default function Skills() {
       ]
     },
     {
-      title: "Desarrollo y Software",
+      title: t('skills_cat_2'),
       skills: [
         { name: "VS Code", icon: "devicon-vscode-plain", color: "#007acc" },
         { name: "Visual Studio", icon: "devicon-visualstudio-plain", color: "#5c2d91" },
@@ -33,7 +38,7 @@ export default function Skills() {
       ]
     },
     {
-      title: "Bases de Datos",
+      title: t('skills_cat_3'),
       skills: [
         { name: "MySQL", icon: "devicon-mysql-plain", color: "#4479a1" },
         { name: "PostgreSQL", icon: "devicon-postgresql-plain", color: "#336791" },
@@ -42,7 +47,7 @@ export default function Skills() {
       ]
     },
     {
-      title: "Sistemas y Cloud",
+      title: t('skills_cat_4'),
       skills: [
         { name: "GNU/Linux", icon: "devicon-linux-plain", color: "#fcc624" },
         { name: "Windows", icon: "devicon-windows8-original", color: "#00a4ef" },
@@ -52,18 +57,18 @@ export default function Skills() {
   ];
 
   return (
-    <section id="habilidades" className="container">
-      <h2 className="section-title">Sobre Mí & Habilidades</h2>
+    <section id="habilidades" className="container" ref={revealRef}>
+      <h2 className="section-title reveal-element">{t('skills_title')}</h2>
       
-      <div className="glass-card" style={{ marginBottom: '2rem' }}>
+      <div className="glass-card reveal-element delay-100" style={{ marginBottom: '2rem' }}>
         <p style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>
-          Durante mi formación he adquirido experiencia teórica y práctica en diversas áreas de la ingeniería de software, desde el desarrollo web y móvil hasta la minería de datos, IoT y videojuegos. Soy una persona proactiva, siempre buscando aprender nuevas tecnologías.
+          {t('skills_description')}
         </p>
       </div>
 
       <div className="categories-grid">
         {skillCategories.map((category, index) => (
-          <div key={index} className="glass-card" style={{ padding: '2.5rem 1.5rem' }}>
+          <div key={index} className={`glass-card reveal-element delay-${Math.min((index + 1) * 100, 300)}`} style={{ padding: '2.5rem 1.5rem' }}>
             <h3 style={{ marginBottom: '2rem', color: 'var(--accent-hover)', fontSize: '1.5rem', textAlign: 'center' }}>{category.title}</h3>
             <div className="skills-flex">
               {category.skills.map((skill, sIndex) => (

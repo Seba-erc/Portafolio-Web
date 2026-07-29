@@ -386,3 +386,15 @@
     will-change: transform, opacity;
     contain: paint;
 }
+
+[data-theme='light'] .animated-background {
+    --c-0: hsla(217, 100%, 80%, 1);
+    --c-1: hsla(0, 0%, 95%, 1);
+    --c-2: hsla(0, 0%, 95%, 1);
+    --c-3: hsla(279, 67%, 85%, 1);
+    --c-4: hsla(279, 67%, 85%, 1);
+    --c-5: hsla(217, 100%, 85%, 1);
+    --c-6: hsla(217, 100%, 80%, 0);
+    --c-7: hsla(217, 100%, 80%, 1);
+    background-color: hsla(262, 82%, 95%, 1);
+}
