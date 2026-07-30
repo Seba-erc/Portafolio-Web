@@ -353,6 +353,14 @@ section {
     flex-wrap: wrap;
     justify-content: center;
     border-radius: 20px;
+    top: 1rem;
+  }
+  
+  /* Ajuste especial para la sección Inicio en móviles para que no choque con el navbar grande */
+  #inicio {
+    padding-top: 8rem !important;
+    align-items: flex-start !important;
+    height: auto !important;
   }
   
   p, span, a, .nav-link { font-size: 0.9rem !important; }
