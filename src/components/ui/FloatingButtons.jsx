@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLanguage } from '../../context/LanguageContext';
 export default function FloatingButtons() {
-  const { language, toggleLanguage } = useLanguage();
   const [showTopBtn, setShowTopBtn] = useState(false);
 
   useEffect(() => {
@@ -34,30 +32,6 @@ export default function FloatingButtons() {
       gap: '1rem',
       zIndex: 9999
     }}>
-      
-      {/* Botón de Idioma */}
-      <button 
-        onClick={toggleLanguage}
-        className="glass-card floating-btn"
-        title="Cambiar Idioma / Change Language"
-        style={{
-          padding: '0',
-          width: '50px',
-          height: '50px',
-          borderRadius: '50%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          cursor: 'pointer',
-          fontWeight: 'bold',
-          fontSize: '1.1rem',
-          color: 'var(--text-primary)',
-          border: '1px solid var(--glass-border)'
-        }}
-      >
-        {language === 'es' ? 'EN' : 'ES'}
-      </button>
-
 
       {/* Botón Volver Arriba */}
       {showTopBtn && (
