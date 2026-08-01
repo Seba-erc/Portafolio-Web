@@ -21,7 +21,6 @@ export default function Skills() {
         { name: "Express", icon: "devicon-express-original", color: "#ffffff" },
         { name: "Kotlin", icon: "devicon-kotlin-plain", color: "#7f52ff" },
         { name: "Python", icon: "devicon-python-plain", color: "#3776ab" },
-        { name: "C++", icon: "devicon-cplusplus-plain", color: "#00599c" },
         { name: "SQL", icon: "devicon-azuresqldatabase-plain", color: "#003b57" }
       ]
     },
