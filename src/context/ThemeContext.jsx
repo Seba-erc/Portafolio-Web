@@ -6,17 +6,9 @@ export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState('dark');
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem('portfolio-theme');
-    if (savedTheme) {
-      setTheme(savedTheme);
-      document.documentElement.setAttribute('data-theme', savedTheme);
-    } else {
-      // Check system preference
-      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-        setTheme('light');
-        document.documentElement.setAttribute('data-theme', 'light');
-      }
-    }
+    // Forzar tema oscuro por defecto siempre
+    setTheme('dark');
+    document.documentElement.setAttribute('data-theme', 'dark');
   }, []);
 
   const toggleTheme = () => {
