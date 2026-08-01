@@ -34,7 +34,6 @@ export default function Navbar() {
       <a href="#habilidades" className="nav-link">{t('nav_skills')}</a>
       <a href="#proyectos" className="nav-link">{t('nav_projects')}</a>
       <a href="#certificados" className="nav-link">{t('nav_certificates')}</a>
-      <a href="#contacto" className="nav-link">{t('nav_contact')}</a>
     </nav>
   );
 }
