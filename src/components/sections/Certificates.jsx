@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import { useLanguage } from '../../context/LanguageContext';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
@@ -11,27 +11,48 @@ pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.vers
 export default function Certificates() {
   const { t } = useLanguage();
   const revealRef = useScrollReveal();
+  const [activeFilter, setActiveFilter] = useState('Todos');
   
   const certificates = [
-    { title: "Programación Básica", file: "/images/certificados/Certificado Programación Básica.pdf" },
-    { title: "Diseño de Software y Base de Datos", file: "/images/certificados/Certificado Diseño de Software y Base de Datos.pdf" },
-    { title: "Administración de Sistemas", file: "/images/certificados/Certificado Administración de Sistemas.pdf" },
-    { title: "Arquitectura de Software", file: "/images/certificados/Certificado Arquitectura de Software.pdf" },
-    { title: "Análisis de Datos", file: "/images/certificados/Certificado Análisis de Datos.pdf" },
-    { title: "Gestión de Proyectos Informáticos", file: "/images/certificados/Certificado Gestión de Proyectos Informáticos.pdf" },
-    { title: "Redes y Enrutamiento", file: "/images/certificados/Certificado Redes y Enrutamiento.pdf" },
-    { title: "Seguridad Informática", file: "/images/certificados/Certificado Seguridad Informática.pdf" },
-    { title: "Programación Avanzada", file: null, pending: true },
-    { title: "Excel - de Básico a Intermedio", file: null, pending: true }
+    { title: "Programación Básica", file: "/images/certificados/Certificado Programación Básica.pdf", category: "Escolares" },
+    { title: "Diseño de Software y Base de Datos", file: "/images/certificados/Certificado Diseño de Software y Base de Datos.pdf", category: "Escolares" },
+    { title: "Administración de Sistemas", file: "/images/certificados/Certificado Administración de Sistemas.pdf", category: "Escolares" },
+    { title: "Arquitectura de Software", file: "/images/certificados/Certificado Arquitectura de Software.pdf", category: "Profesionales" },
+    { title: "Análisis de Datos", file: "/images/certificados/Certificado Análisis de Datos.pdf", category: "Profesionales" },
+    { title: "Gestión de Proyectos Informáticos", file: "/images/certificados/Certificado Gestión de Proyectos Informáticos.pdf", category: "Profesionales" },
+    { title: "Redes y Enrutamiento", file: "/images/certificados/Certificado Redes y Enrutamiento.pdf", category: "Profesionales" },
+    { title: "Seguridad Informática", file: "/images/certificados/Certificado Seguridad Informática.pdf", category: "Profesionales" },
+    { title: "Programación Avanzada", file: null, pending: true, category: "Escolares" },
+    { title: "Excel - de Básico a Intermedio", file: null, pending: true, category: "Otros" }
   ];
+
+  const filters = ['Todos', 'Profesionales', 'Escolares', 'Otros'];
+
+  const filteredCertificates = certificates.filter(cert => 
+    activeFilter === 'Todos' || cert.category === activeFilter
+  );
 
   return (
     <section id="certificados" className="container" ref={revealRef}>
       <h2 className="section-title reveal-element">{t('cert_title')}</h2>
       
-      <div className="certifications-grid reveal-element delay-100">
-        {certificates.map((cert, index) => (
-          <div key={index} className={`glass-card delay-${Math.min((index + 1) * 100, 300)}`} style={{ display: 'flex', flexDirection: 'column', padding: '1.2rem', alignItems: 'center' }}>
+      {/* Botones de Filtro */}
+      <div className="reveal-element delay-100" style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginBottom: '3rem', flexWrap: 'wrap' }}>
+        {filters.map(filter => (
+          <button
+            key={filter}
+            onClick={() => setActiveFilter(filter)}
+            className={`btn ${activeFilter === filter ? 'btn-primary' : 'btn-outline'}`}
+            style={{ padding: '0.6rem 1.2rem', fontSize: '0.9rem', borderRadius: '50px' }}
+          >
+            {filter}
+          </button>
+        ))}
+      </div>
+
+      <div className="certifications-grid reveal-element delay-200">
+        {filteredCertificates.map((cert, index) => (
+          <div key={`${cert.title}-${index}`} className="glass-card" style={{ display: 'flex', flexDirection: 'column', padding: '1.2rem', alignItems: 'center', animation: 'fadeIn 0.5s ease' }}>
             <h3 style={{ marginBottom: '1rem', fontSize: '1.15rem', color: '#FFD700', textShadow: '0 0 8px rgba(255, 215, 0, 0.4)', textAlign: 'center', minHeight: '3.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{cert.title}</h3>
             
             <a 
