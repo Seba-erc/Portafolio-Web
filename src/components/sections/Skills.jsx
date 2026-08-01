@@ -31,7 +31,7 @@ export default function Skills() {
         { name: "Visual Studio", icon: "devicon-visualstudio-plain", color: "#5c2d91" },
         { name: "Expo", image: "/assets/icons/expo.svg?v=2", color: "#ffffff" },
         { name: "Android Studio", icon: "devicon-androidstudio-plain", color: "#3ddc84" },
-        { name: "Apache NetBeans", icon: "devicon-apache-plain", color: "#1b6ac6" },
+        { name: "Apache NetBeans", image: "/assets/icons/netbeans.svg", color: "#1b6ac6" },
         { name: "Unity", image: "/assets/icons/unity-icon.svg", color: "#ffffff" },
         { name: "Arduino IDE", icon: "devicon-arduino-plain", color: "#00979d" }
       ]
