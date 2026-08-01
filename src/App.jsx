@@ -38,6 +38,25 @@ function App() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
+  const [wasInProject, setWasInProject] = useState(false);
+
+  useEffect(() => {
+    if (activeProject) {
+      setWasInProject(true);
+    } else if (wasInProject) {
+      // Cuando volvemos al inicio desde un proyecto, hacemos scroll a la sección de proyectos
+      setTimeout(() => {
+        const section = document.getElementById('proyectos');
+        if (section) {
+          // Usamos scrollIntoView con un pequeño ajuste para el navbar
+          const y = section.getBoundingClientRect().top + window.scrollY - 80;
+          window.scrollTo({ top: y, behavior: 'auto' });
+        }
+      }, 50);
+      setWasInProject(false);
+    }
+  }, [activeProject, wasInProject]);
+
   const handleViewProject = (project) => {
     setActiveProject(project);
     window.history.pushState({}, '', `/${project.urlSlug}`);
