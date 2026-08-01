@@ -337,7 +337,6 @@ section {
 
   .container {
     padding: 0 1rem;
-    overflow-x: hidden;
   }
   
   h1 { font-size: 2.2rem !important; }
