@@ -82,7 +82,7 @@ export default function Hero() {
           <div>
             <h3 style={{ color: 'var(--accent-hover)', marginBottom: '0.8rem', fontSize: '1.1rem' }}>{t('hero_socials')}</h3>
             <div style={{ display: 'flex', gap: '1.5rem' }}>
-              <a href="https://www.linkedin.com/in/sebastian-esteban-reinoso-concha-6630b133a" target="_blank" rel="noopener noreferrer" className="social-link" title="Perfil de LinkedIn">
+              <a href="https://www.linkedin.com/in/devserc" target="_blank" rel="noopener noreferrer" className="social-link" title="Perfil de LinkedIn">
                 <i className="devicon-linkedin-plain colored" style={{ fontSize: '2.5rem' }}></i>
               </a>
               <a href="https://github.com/Seba-erc" target="_blank" rel="noopener noreferrer" className="social-link" title="Perfil de GitHub">
