@@ -24,6 +24,9 @@ export const translations = {
     hero_btn_certificates: "Mis Certificados",
     hero_btn_cv: "Ver CV",
     hero_btn_malla: "Malla Curricular",
+    hero_req_title: "Requisitos Institucionales de la Práctica",
+    hero_req_1: "Enfoque en Desarrollo de Software: Las labores a realizar deben estar dedicadas exclusivamente al desarrollo de software.",
+    hero_req_2: "Supervisión Calificada: La empresa debe contar con un Ingeniero en Informática o Ingeniero Civil en Informática como supervisor directo del proceso.",
     
     // Skills
     skills_title: "Sobre Mí & Habilidades",

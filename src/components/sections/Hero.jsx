@@ -102,9 +102,30 @@ export default function Hero() {
           <h2 style={{ fontSize: '1.8rem', marginBottom: '1.5rem', color: 'var(--text-primary)', fontWeight: '400' }}>
             {t('hero_subtitle')}
           </h2>
-          <p style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', marginBottom: '2.5rem' }}>
+          <p style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>
             {t('hero_description')}
           </p>
+
+          <div style={{
+            border: '2px solid rgba(255, 165, 0, 0.6)',
+            borderRadius: '12px',
+            padding: '1.2rem 1.5rem',
+            marginBottom: '2.5rem',
+            backgroundColor: 'rgba(255, 165, 0, 0.05)',
+            boxShadow: '0 4px 15px rgba(255, 165, 0, 0.1)'
+          }}>
+            <h3 style={{ color: '#ffa500', fontSize: '1.1rem', marginBottom: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
+              </svg>
+              {t('hero_req_title')}
+            </h3>
+            <ul style={{ margin: 0, paddingLeft: '1.5rem', color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: '1.6', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <li><strong>Enfoque en Desarrollo de Software:</strong> Las labores a realizar deben estar dedicadas exclusivamente al desarrollo de software.</li>
+              <li><strong>Supervisión Calificada:</strong> La empresa debe contar con un Ingeniero en Informática o Ingeniero Civil en Informática como supervisor directo del proceso.</li>
+            </ul>
+          </div>
           
           <div className="hero-actions" style={{ justifyContent: 'flex-start' }}>
             <a href="#proyectos" className="btn btn-primary">{t('hero_btn_projects')}</a>
