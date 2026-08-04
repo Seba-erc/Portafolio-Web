@@ -344,25 +344,20 @@ section {
   .section-title { font-size: 2rem !important; margin-bottom: 2rem; }
   .glass-card { padding: 1.5rem 1rem !important; }
 
-  /* Barra de navegación responsiva: una sola línea con scroll horizontal suave */
+  /* Barra de navegación responsiva: envuelve en 2 líneas con líneas separadoras */
   .smart-navbar {
-    width: max-content;
-    max-width: 90vw;
-    gap: 1.2rem;
-    padding: 0.8rem 1.2rem;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none; /* Firefox */
+    width: 90vw;
+    gap: 0.5rem 0.5rem;
+    padding: 0.8rem 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
     border-radius: 20px;
     top: 1rem;
   }
-  .smart-navbar::-webkit-scrollbar {
-    display: none; /* Chrome/Safari */
-  }
-  .nav-link {
-    white-space: nowrap;
+  
+  .nav-link:not(:last-child) {
+    border-right: 1px solid rgba(255,255,255,0.3);
+    padding-right: 0.5rem;
   }
   
   /* Ajuste especial para la sección Inicio en móviles para que no choque con el navbar grande */
