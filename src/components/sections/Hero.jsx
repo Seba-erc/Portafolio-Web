@@ -122,8 +122,8 @@ export default function Hero() {
               {t('hero_req_title')}
             </h3>
             <ul style={{ margin: 0, paddingLeft: '1.5rem', color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: '1.6', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <li><strong>Enfoque en Desarrollo de Software:</strong> Las labores a realizar deben estar dedicadas exclusivamente al desarrollo de software.</li>
-              <li><strong>Supervisión Calificada:</strong> La empresa debe contar con un Ingeniero en Informática o Ingeniero Civil en Informática como supervisor directo del proceso.</li>
+              <li><strong>Enfoque en Desarrollo de Software:</strong> El estudiante estará dedicado a la programación y desarrollo de una solución de software para la empresa.</li>
+              <li><strong>Supervisión Calificada:</strong> El proceso será acompañado por un Ingeniero en Informática o Civil en Informática (TITULADO) de la empresa, quien actuará como supervisor directo.</li>
             </ul>
           </div>
           
