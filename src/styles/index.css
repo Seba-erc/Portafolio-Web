@@ -363,6 +363,7 @@ section {
   }
   
   p, span, a, .nav-link { font-size: 0.9rem !important; }
+  h1 span { font-size: inherit !important; }
   
   /* Ajustar botones y redes sociales del Hero */
   .hero-actions {
