@@ -109,7 +109,7 @@ export default function Hero() {
           <div className="hero-actions" style={{ justifyContent: 'flex-start' }}>
             <a href="#proyectos" className="btn btn-primary">{t('hero_btn_projects')}</a>
             <a href="#certificados" className="btn btn-outline">{t('hero_btn_certificates')}</a>
-            <a href="/docs/CV.pdf" target="_blank" rel="noopener noreferrer" className="btn btn-primary">{t('hero_btn_cv')}</a>
+            <a href="/docs/Curriculum.pdf" target="_blank" rel="noopener noreferrer" className="btn btn-primary">{t('hero_btn_cv')}</a>
             <a href="/docs/Malla.pdf" target="_blank" rel="noopener noreferrer" className="btn btn-outline">{t('hero_btn_malla')}</a>
           </div>
         </div>
