@@ -18,8 +18,8 @@ export const translations = {
     hero_whatsapp_btn: "Ir a WhatsApp",
     hero_socials: "Redes Profesionales",
     hero_greeting: "Hola, soy",
-    hero_subtitle: "Futuro Ingeniero Informático",
-    hero_description: "Estudiante apasionado por el desarrollo de software. Buscando mi primera práctica profesional para aportar, aprender y crecer enfrentando desafíos reales de ingeniería.",
+    hero_subtitle: "Desarrollador Junior Asistido por IA",
+    hero_description: "Estudiante de Ingeniería en Informática en busca de mi primera práctica profesional en desarrollo de software. Integro herramientas de Inteligencia Artificial (IA) en mi flujo de trabajo para acelerar el aprendizaje, estructurar código con buenas prácticas y resolver problemas técnicos de forma autodidacta. Motivado por trabajar junto a profesionales con experiencia, aportando una actitud proactiva y disposición constante a aprender.",
     hero_btn_projects: "Ver Mis Proyectos",
     hero_btn_certificates: "Mis Certificados",
     hero_btn_cv: "Ver CV",
@@ -27,7 +27,7 @@ export const translations = {
     
     // Skills
     skills_title: "Sobre Mí & Habilidades",
-    skills_description: "Durante mi formación he adquirido experiencia teórica y práctica en diversas áreas de la ingeniería de software, desde el desarrollo web y móvil hasta la minería de datos, IoT y videojuegos. Soy una persona proactiva, siempre buscando aprender nuevas tecnologías.",
+    skills_description: "Desarrollo Asistido: Capacidad para integrar asistentes de IA en la generación, optimización y entendimiento de código.\n\nHabilidades Blandas: Capacidad de autogestión, aprendizaje rápido y disposición para recibir retroalimentación.",
     skills_cat_1: "Lenguajes & Frameworks",
     skills_cat_2: "Desarrollo y Software",
     skills_cat_3: "Bases de Datos",
