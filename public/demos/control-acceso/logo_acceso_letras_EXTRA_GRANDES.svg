@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="220" viewBox="0 0 1100 220">
+  <rect width="1100" height="220" fill="#FFFFFF"/>
+  
+  <!-- Icono un poco más compacto para dar espacio al texto -->
+  <g transform="translate(15,25)">
+    <rect width="170" height="170" rx="38" fill="#101A2D"/>
+    <g transform="translate(16,14)">
+      <path d="M68 6 L114 23 V74 C114 104 95 129 68 140 C41 129 22 104 22 74 V23 L68 6Z" 
+            fill="none" stroke="#4DA3E0" stroke-width="5.5" stroke-linejoin="round"/>
+      <g transform="translate(34,44)">
+        <path d="M8 17 L13 3 H49 L54 17 Z" fill="white"/>
+        <rect x="18" y="6" width="26" height="9" rx="1.8" fill="#101A2D"/>
+        <rect x="0" y="17" width="62" height="24" rx="5.5" fill="white"/>
+        <circle cx="14" cy="38" r="4" fill="#101A2D"/>
+        <circle cx="48" cy="38" r="4" fill="#101A2D"/>
+      </g>
+    </g>
+    <g transform="translate(102,102)">
+      <circle cx="26" cy="26" r="24" fill="#101A2D"/>
+      <circle cx="26" cy="26" r="18" fill="#22C55E"/>
+      <path d="M15 26 L22 33 L37 18" fill="none" stroke="white" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+  </g>
+
+  <!-- Textos EXTRA GRANDES -->
+  <g transform="translate(210, 78)">
+    <text x="0" y="0" font-family="'Inter', 'Sora', system-ui, sans-serif" 
+          font-weight="900" font-size="78" fill="#0A1220" letter-spacing="-2.2">ACCESO VEHICULAR</text>
+    <text x="0" y="58" font-family="'Inter', system-ui, sans-serif" 
+          font-weight="800" font-size="32" fill="#4B5B76" letter-spacing="4.6">SISTEMA DE REGISTRO Y CONTROL</text>
+    <g transform="translate(0, 82)">
+      <rect x="0" y="0" width="140" height="9" rx="4.5" fill="#38BDF8"/>
+      <rect x="158" y="0" width="62" height="9" rx="4.5" fill="#22C55E"/>
+    </g>
+  </g>
+</svg>
