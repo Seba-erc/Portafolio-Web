@@ -78,9 +78,9 @@ export default function ProjectDetails({ project, onBack }) {
               <i className="devicon-github-original" style={{ fontSize: '1.5rem' }}></i> {t('details_source')}
             </a>
           ) : (
-            <div className="btn btn-outline" style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', fontSize: '1.1rem', padding: '0.8rem 2rem', opacity: 0.6, cursor: 'not-allowed', position: 'relative', overflow: 'hidden' }} title="Bloqueado por ahora">
+            <div className="btn btn-outline" style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', fontSize: '1.1rem', padding: '0.8rem 2rem', opacity: 0.65, cursor: 'not-allowed', position: 'relative', overflow: 'hidden' }} title="Bloqueado por ahora">
               <i className="devicon-github-original" style={{ fontSize: '1.5rem' }}></i> {t('details_source')}
-              <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(15, 23, 42, 0.7)', color: '#ffb347', fontSize: '0.85rem', fontWeight: 'bold', textTransform: 'uppercase', backdropFilter: 'blur(2px)', letterSpacing: '0.5px' }}>
+              <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ffb347', fontSize: '0.85rem', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.5px', transform: 'rotate(-5deg)', textShadow: '2px 2px 4px rgba(0,0,0,0.9), -1px -1px 2px rgba(0,0,0,0.9)', pointerEvents: 'none' }}>
                 Bloqueado por ahora
               </div>
             </div>
