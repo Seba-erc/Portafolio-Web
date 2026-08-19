@@ -73,9 +73,18 @@ export default function ProjectDetails({ project, onBack }) {
         </div>
 
         <div style={{ display: 'flex', justifyContent: 'center', gap: '1.5rem', zIndex: 1, position: 'relative', flexWrap: 'wrap', marginBottom: '3rem' }}>
-          <a href={project.github} target="_blank" rel="noopener noreferrer" className="btn btn-outline" style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', fontSize: '1.1rem', padding: '0.8rem 2rem' }}>
-            <i className="devicon-github-original" style={{ fontSize: '1.5rem' }}></i> {t('details_source')}
-          </a>
+          {project.github && project.github !== "#" && project.github !== "https://github.com/Seba-erc" ? (
+            <a href={project.github} target="_blank" rel="noopener noreferrer" className="btn btn-outline" style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', fontSize: '1.1rem', padding: '0.8rem 2rem' }}>
+              <i className="devicon-github-original" style={{ fontSize: '1.5rem' }}></i> {t('details_source')}
+            </a>
+          ) : (
+            <div className="btn btn-outline" style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', fontSize: '1.1rem', padding: '0.8rem 2rem', opacity: 0.6, cursor: 'not-allowed', position: 'relative', overflow: 'hidden' }} title="Bloqueado por ahora">
+              <i className="devicon-github-original" style={{ fontSize: '1.5rem' }}></i> {t('details_source')}
+              <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(15, 23, 42, 0.7)', color: '#ffb347', fontSize: '0.85rem', fontWeight: 'bold', textTransform: 'uppercase', backdropFilter: 'blur(2px)', letterSpacing: '0.5px' }}>
+                Bloqueado por ahora
+              </div>
+            </div>
+          )}
           {project.demo !== "#" && (
             <a href={project.demo} target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', fontSize: '1.1rem', padding: '0.8rem 2rem' }}>
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
