@@ -80,8 +80,10 @@ export default function ProjectDetails({ project, onBack }) {
           ) : (
             <div className="btn btn-outline" style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', fontSize: '1.1rem', padding: '0.8rem 2rem', opacity: 0.65, cursor: 'not-allowed', position: 'relative', overflow: 'hidden' }} title="Bloqueado por ahora">
               <i className="devicon-github-original" style={{ fontSize: '1.5rem' }}></i> {t('details_source')}
-              <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ffb347', fontSize: '0.85rem', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.5px', transform: 'rotate(-5deg)', textShadow: '2px 2px 4px rgba(0,0,0,0.9), -1px -1px 2px rgba(0,0,0,0.9)', pointerEvents: 'none' }}>
-                Bloqueado por ahora
+              <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none' }}>
+                <span style={{ color: '#ff3333', border: '3px solid #ff3333', background: 'rgba(0, 0, 0, 0.85)', padding: '0.3rem 0.8rem', borderRadius: '8px', fontSize: '0.9rem', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '1px', transform: 'rotate(-12deg)', textShadow: '1px 1px 2px rgba(0,0,0,1)', boxShadow: '0 4px 10px rgba(0,0,0,0.5)' }}>
+                  Bloqueado por ahora
+                </span>
               </div>
             </div>
           )}
