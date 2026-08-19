@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#3a0d66" />
+    <title>Demo | Sistema de Control de Acceso Vehicular</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div id="app">
+      <section id="loginView" class="login-wrapper active" aria-label="Inicio de sesión">
+        <div class="login-stack">
+          <div class="login-card">
+            <div class="login-logo">
+              <img src="../logo_acceso_letras_EXTRA_GRANDES.svg" alt="Acceso Vehicular" />
+            </div>
+            <form id="loginForm" novalidate>
+              <div class="input-group login-input">
+                <label for="loginUser">Nombre de Usuario</label>
+                <input id="loginUser" name="usuario" type="text" autocomplete="username" placeholder="Introduce tu Usuario" required />
+              </div>
+              <div class="input-group login-input mt-15">
+                <label for="loginPassword">Contraseña</label>
+                <input id="loginPassword" name="clave" type="password" autocomplete="current-password" placeholder="Introduce tu Contraseña" required />
+              </div>
+              <p id="loginError" class="error-text" hidden></p>
+              <div class="login-action">
+                <button class="btn-primary mt-25" type="submit">Ingresar</button>
+              </div>
+            </form>
+          </div>
+
+          <aside class="demo-credentials" aria-label="Credenciales de prueba">
+            <p class="credentials-title">Credenciales para probar la demo</p>
+            <button class="credential-row" type="button" data-demo-account="admin">
+              <strong>Administrador</strong><span><code>admin</code><i>/</i><code>cambiar123456</code></span>
+            </button>
+            <button class="credential-row" type="button" data-demo-account="supervisor">
+              <strong>Supervisor</strong><span><code>supervisor</code><i>/</i><code>supervisor123456</code></span>
+            </button>
+            <button class="credential-row" type="button" data-demo-account="operador">
+              <strong>Operador</strong><span><code>operador</code><i>/</i><code>operador123456</code></span>
+            </button>
+          </aside>
+        </div>
+      </section>
+
+      <section id="dashboardView" class="dashboard-shell" hidden>
+        <nav class="navbar" aria-label="Navegación principal">
+          <div class="brand">
+            <img src="../logo_recortado_final.svg" alt="" class="brand-icon" />
+            <span id="dashboardTitle" class="registry">Dashboard Administrador</span>
+          </div>
+
+          <button id="mobileToggle" class="mobile-toggle" type="button" aria-label="Abrir menú">☰</button>
+
+          <div class="nav-links" aria-label="Secciones">
+            <button class="nav-tab active" data-tab="dashboard" type="button">Dashboard Visual</button>
+            <button class="nav-tab" data-tab="registro" type="button">Registro</button>
+            <button class="nav-tab" data-tab="reportes" type="button">Reportes (Tabla)</button>
+            <button class="nav-tab" data-tab="usuarios" data-admin-only type="button">Usuarios</button>
+            <button class="nav-tab" data-tab="lista-negra" data-admin-only type="button">Lista Negra</button>
+            <button class="nav-tab" data-tab="auditoria" data-admin-only type="button">Auditoría</button>
+          </div>
+
+          <div class="user-menu">
+            <div class="user-info">
+              <div id="userName" class="user-label">Administrador</div>
+              <div id="userRole" class="user-role">ADMIN</div>
+            </div>
+            <div class="account-wrap">
+              <button id="accountToggle" class="btn-outline btn-icon" type="button" aria-label="Configuración de la cuenta">⚙️</button>
+              <div id="accountMenu" class="menu-dropdown" hidden>
+                <button type="button" data-account-action="usuario">Cambiar nombre de usuario</button>
+                <button type="button" data-account-action="clave">Cambiar contraseña</button>
+                <button type="button" data-account-action="global">Cerrar sesión en todos los dispositivos</button>
+              </div>
+            </div>
+            <button id="logoutButton" class="btn-outline logout-btn" type="button"><span aria-hidden="true">⇥</span> Cerrar sesión</button>
+          </div>
+        </nav>
+
+        <div id="mobileOverlay" class="mobile-overlay"></div>
+        <aside id="mobileDrawer" class="nav-drawer" aria-label="Menú móvil">
+          <div class="drawer-header"><button id="closeDrawer" class="close-drawer" type="button" aria-label="Cerrar menú">×</button></div>
+          <div class="user-info drawer-user"><div id="drawerUserName" class="user-label">Administrador</div><div id="drawerUserRole" class="user-role">ADMIN</div></div>
+          <div class="drawer-links">
+            <button class="drawer-tab active" data-tab="dashboard" type="button">Dashboard Visual</button>
+            <button class="drawer-tab" data-tab="registro" type="button">Registro</button>
+            <button class="drawer-tab" data-tab="reportes" type="button">Reportes (Tabla)</button>
+            <button class="drawer-tab" data-tab="usuarios" data-admin-only type="button">Usuarios</button>
+            <button class="drawer-tab" data-tab="lista-negra" data-admin-only type="button">Lista Negra</button>
+            <button class="drawer-tab" data-tab="auditoria" data-admin-only type="button">Auditoría</button>
+          </div>
+          <div class="drawer-actions">
+            <button class="btn-outline" type="button" data-account-action="usuario">Usuario</button>
+            <button class="btn-outline" type="button" data-account-action="clave">Contraseña</button>
+            <button class="btn-outline" type="button" data-account-action="global">Cerrar global</button>
+            <button class="btn-outline" type="button" data-action="logout">⇥ Salir</button>
+          </div>
+        </aside>
+
+        <main class="principal">
+          <section class="view-container active" data-view="dashboard">
+            <div class="visual-layout">
+              <article class="card chart-card chart-wide">
+                <div class="chart-title-row"><div><h3>Flujo de Vehículos por Hora</h3><p>Movimientos registrados durante la jornada</p></div><span class="chart-chip">Hoy</span></div>
+                <div class="line-chart-wrap"><canvas id="flowChart" aria-label="Gráfico de flujo de vehículos por hora" role="img"></canvas></div>
+              </article>
+
+              <article class="card chart-card">
+                <div class="chart-title-row"><div><h3>Vehículos por Motivo</h3><p>Distribución de registros</p></div></div>
+                <div class="donut-content">
+                  <div class="donut" aria-hidden="true"><div class="donut-center"><strong id="donutTotal">12</strong><span>registros</span></div></div>
+                  <ul class="legend-list">
+                    <li><span class="legend-dot orange"></span>Entrega de mercadería <b>5</b></li>
+                    <li><span class="legend-dot purple"></span>Visita <b>3</b></li>
+                    <li><span class="legend-dot green"></span>Mantenimiento <b>2</b></li>
+                    <li><span class="legend-dot yellow"></span>Retiro <b>2</b></li>
+                  </ul>
+                </div>
+              </article>
+
+              <article class="card chart-card">
+                <div class="chart-title-row"><div><h3>Top 5 Procedencias</h3><p>Origen de los vehículos</p></div></div>
+                <div class="bar-chart" aria-label="Gráfico de procedencias">
+                  <div class="bar-row"><span>CD Sur</span><div><i style="--bar: 88%"></i></div><b>7</b></div>
+                  <div class="bar-row"><span>Proveedor Norte</span><div><i style="--bar: 64%"></i></div><b>5</b></div>
+                  <div class="bar-row"><span>Planta Central</span><div><i style="--bar: 51%"></i></div><b>4</b></div>
+                  <div class="bar-row"><span>Servicios Externos</span><div><i style="--bar: 38%"></i></div><b>3</b></div>
+                  <div class="bar-row"><span>Particular</span><div><i style="--bar: 25%"></i></div><b>2</b></div>
+                </div>
+              </article>
+
+              <article class="card vehicles-card chart-wide">
+                <div class="card-header vehicle-header"><div><h3>Vehículos Adentro <span id="insideCountLabel">(4)</span></h3><p class="header-caption">Control en tiempo real</p></div><input id="insideSearch" class="table-search" type="search" placeholder="Buscar por patente o conductor..." /></div>
+                <div class="table-responsive inside-table"><table class="table-primary"><thead><tr><th>Hora Entrada</th><th>Conductor</th><th>Patente</th><th class="centered">Acción</th></tr></thead><tbody id="insideTableBody"></tbody></table></div>
+              </article>
+            </div>
+          </section>
+
+          <section class="view-container" data-view="registro" hidden>
+            <article class="card border-top-orange">
+              <div class="card-header"><h3>Módulo de Registro de Control de Acceso</h3><span class="badge-time">🕒 <span id="clock">--:--:--</span></span></div>
+              <form id="registerForm" class="mt-25">
+                <h4 class="section-title">Datos de la Persona y Movimiento</h4>
+                <div class="grid-form">
+                  <div class="input-group"><label for="driverName">Nombre del conductor *</label><input id="driverName" name="conductor" type="text" required maxlength="30" placeholder="Ej: Juan Daniel García Treviño" /></div>
+                  <div class="input-group"><label for="driverRut">RUT</label><input id="driverRut" name="rut" type="text" required maxlength="12" placeholder="Ej: 12.345.678-9" /></div>
+                  <div class="input-group"><label for="driverPhone">Teléfono</label><input id="driverPhone" name="telefono" type="tel" required maxlength="16" placeholder="Ej: +56 9 1234 5678" /></div>
+                  <div class="input-group"><label for="companions">Acompañante(s)</label><input id="companions" name="acompanantes" type="text" maxlength="30" placeholder="Ej: Pedro Lagos" /></div>
+                  <div class="input-group"><label for="origin">Procedencia</label><input id="origin" name="procedencia" type="text" maxlength="30" placeholder="Ej: Centro de Distribución Sur" /></div>
+                  <div class="input-group"><label for="purpose">Motivo *</label><select id="purpose" name="motivo"><option>Entrega de mercadería</option><option>Retiro</option><option>Mantenimiento</option><option>Visita</option><option>Trabajador de la empresa</option><option>Otro</option></select></div>
+                </div>
+                <h4 class="section-title mt-30">Datos del Vehículo</h4>
+                <div class="grid-form vehicle-form-grid">
+                  <div class="input-group"><label for="plate">Patente *</label><input id="plate" name="patente" class="uppercase" type="text" required maxlength="10" placeholder="Ej: ABCD12" /><small id="blacklistWarning" class="field-warning" hidden></small></div>
+                  <div class="input-group"><label for="vehicleType">Tipo *</label><select id="vehicleType" name="tipo"><option>Camión</option><option>Furgón</option><option>Auto</option><option>Camioneta</option><option>Moto</option></select></div>
+                  <div class="input-group"><label for="vehicleBrand">Marca / Modelo</label><input id="vehicleBrand" name="marca" type="text" required maxlength="30" placeholder="Ej: Kia Frontier" /></div>
+                </div>
+                <div class="photo-upload mt-25"><label>📷 Fotografía (Opcional)</label><div class="photo-actions"><label class="photo-choice" for="galleryFile">📁 Escoger de Galería</label><label class="photo-choice" for="cameraFile">📸 Sacar una foto</label></div><input id="galleryFile" type="file" accept="image/*" hidden /><input id="cameraFile" type="file" accept="image/*" capture="environment" hidden /><div id="photoStatus" class="photo-status" hidden></div></div>
+                <button class="btn-primary mt-25" type="submit">Registrar movimiento</button>
+              </form>
+            </article>
+          </section>
+
+          <section class="view-container" data-view="reportes" hidden>
+            <article class="card border-top-orange">
+              <div class="card-header"><h3>Panel de Reportes (Administrador)</h3></div>
+              <div class="stats-grid">
+                <div class="stat-card"><h4>Total registros</h4><p id="totalRecords">12</p></div>
+                <div class="stat-card"><h4>Actualmente dentro</h4><p id="insideRecords">4</p></div>
+                <div class="stat-card alert-stat"><h4>En alerta ⚠️</h4><p id="alertRecords">1</p></div>
+                <div class="stat-card"><h4>Con foto</h4><p id="photoRecords">8</p></div>
+                <div class="stat-card last-action"><h4>Última acción</h4><p id="lastAction">Administrador Demo (admin) — hoy</p></div>
+              </div>
+              <label class="threshold">Alertar cuando un vehículo lleve más de <input id="threshold" type="number" min="1" value="6" /> horas dentro</label>
+            </article>
+            <article class="card mt-15">
+              <div class="card-header"><h3>Historial de Movimientos</h3><button id="exportButton" class="btn-outline-dark" type="button">⇩ Exportar CSV</button></div>
+              <div class="filters"><div class="input-group"><label for="reportSearch">Buscar</label><input id="reportSearch" type="search" placeholder="Conductor, patente, RUT..." /></div><div class="input-group"><label for="reportStatus">Estado</label><select id="reportStatus"><option value="all">Todos</option><option value="inside">Dentro</option><option value="outside">Con salida</option></select></div><button id="clearFilters" class="btn-small filter-button" type="button">Limpiar filtros</button></div>
+              <div class="table-responsive"><table class="table-primary history-table"><thead><tr><th>Fecha entrada</th><th>Salida / Estado</th><th>Conductor</th><th>RUT</th><th>Teléfono</th><th>Acompañantes</th><th>Motivo</th><th>Procedencia</th><th>Patente</th><th>Tipo</th><th>Marca</th><th>Foto</th><th>Registrado por</th><th>Acciones</th></tr></thead><tbody id="historyTableBody"></tbody></table></div>
+            </article>
+          </section>
+
+          <section class="view-container" data-view="usuarios" hidden>
+            <article class="card border-top-orange">
+              <div class="card-header"><h3>Gestión de Usuarios</h3></div>
+              <form id="userForm" class="mt-25"><div class="grid-form"><div class="input-group full-width"><label for="newUserName">Nombre Completo *</label><input id="newUserName" required autocomplete="off" /></div><div class="input-group"><label for="newUserLogin">Nombre de Usuario *</label><input id="newUserLogin" required autocomplete="off" /></div><div class="input-group"><label for="newUserPassword">Contraseña *</label><input id="newUserPassword" type="password" required minlength="12" autocomplete="new-password" /></div><div class="input-group full-width"><label for="newUserRole">Rol del Sistema *</label><select id="newUserRole"><option value="operador">Operador</option><option value="supervisor">Supervisor</option><option value="admin">Administrador</option></select></div></div><button class="btn-primary mt-25 user-submit" type="submit">Registrar usuario</button></form>
+            </article>
+            <article class="card mt-15"><div class="card-header"><h3>Usuarios Registrados</h3></div><div class="table-responsive"><table class="table-primary"><thead><tr><th>Nombre</th><th>Usuario</th><th>Rol</th><th>Estado</th><th>Acciones</th></tr></thead><tbody id="usersTableBody"></tbody></table></div></article>
+          </section>
+
+          <section class="view-container" data-view="lista-negra" hidden>
+            <article class="card border-top-orange"><div class="card-header"><h3>Agregar Patente a la Lista Negra</h3></div><form id="blacklistForm" class="mt-25"><div class="grid-form"><div class="input-group"><label for="blockedPlate">Patente *</label><input id="blockedPlate" class="uppercase" required maxlength="10" placeholder="Ej: ABCD12" /></div><div class="input-group"><label for="blockedReason">Motivo *</label><input id="blockedReason" required maxlength="255" placeholder="Ej: Incidente de seguridad 03/2026" /></div></div><button class="btn-primary mt-25" type="submit">Agregar a la lista negra</button></form></article>
+            <article class="card mt-15"><div class="card-header"><h3>Patentes en la Lista Negra</h3></div><div class="table-responsive"><table class="table-primary"><thead><tr><th>Patente</th><th>Motivo</th><th>Agregado por</th><th>Fecha</th><th>Acciones</th></tr></thead><tbody id="blacklistTableBody"></tbody></table></div></article>
+          </section>
+
+          <section class="view-container" data-view="auditoria" hidden>
+            <article class="card border-top-orange"><div class="card-header"><h3>Auditoría del Sistema</h3><button id="auditExport" class="btn-outline-dark" type="button">⇩ Exportar CSV</button></div><div class="filters audit-filters"><div class="input-group"><label for="auditSearch">Buscar actividad</label><input id="auditSearch" type="search" placeholder="Usuario, acción o detalle..." /></div></div><div class="table-responsive"><table class="table-primary"><thead><tr><th>Fecha</th><th>Usuario</th><th>Acción</th><th>Detalle</th><th>Dirección IP</th></tr></thead><tbody id="auditTableBody"></tbody></table></div></article>
+          </section>
+        </main>
+      </section>
+    </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+    <div id="modal" class="modal-backdrop" hidden><div class="modal-card"><button id="modalClose" class="modal-close" type="button" aria-label="Cerrar">×</button><div id="modalContent"></div></div></div>
+    <script src="./app.js"></script>
+  </body>
+</html>

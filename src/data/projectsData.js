@@ -20,7 +20,7 @@ export const projectsData = [
     longDescription: "Este proyecto es un demo interactivo de un sistema de control de acceso vehicular.\n\nConstruí una plataforma con login, panel de recepción (ingresos/salidas) y panel de administrador (usuarios y reportes). Implementé validación de formularios en tiempo real, modo oscuro y una experiencia de uso pensada para porterías o casetas de seguridad.\n\nEl diseño está optimizado para uso ágil, desarrollado con React en el frontend y Node.js con MySQL para el backend, utilizando JWT para la autenticación.",
     tech: ["React", "Node.js", "MySQL", "JWT", "DBeaver"],
     github: "https://github.com/Seba-erc",
-    demo: "/demos/Demo-Control-Acceso-Vehiculos.html",
+    demo: "/demos/control-acceso/index.html",
     icon: "devicon-react-original"
   },
   {
