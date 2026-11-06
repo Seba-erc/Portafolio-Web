@@ -48,6 +48,17 @@ export const projectsData = [
   },
   {
     id: 4,
+    urlSlug: "CRM-Inmobiliario-Vectorial-Group",
+    title: "CRM Inmobiliario – Vectorial Group (En Desarrollo)",
+    shortDescription: "Plataforma web para gestionar propiedades, brokers y solicitudes de servicios inmobiliarios, con funcionalidades de inteligencia artificial contempladas en el proyecto.",
+    longDescription: "Plataforma web para gestionar propiedades, brokers y solicitudes de servicios inmobiliarios, con funcionalidades de inteligencia artificial contempladas en el proyecto.\n\nDesarrollado como parte de mi práctica profesional y proyecto de título, orientado a optimizar procesos, automatizar tareas y mejorar la gestión de servicios inmobiliarios.",
+    tech: ["Next.js", "React", "TypeScript", "PostgreSQL"],
+    github: "#",
+    demo: "#",
+    icon: "devicon-nextjs-plain"
+  },
+  {
+    id: 5,
     urlSlug: "Pagina-Sastreria",
     title: "Página Web para Sastrería (En Desarrollo)",
     shortDescription: "Desarrollé una página web estática para una sastrería.",
@@ -58,7 +69,7 @@ export const projectsData = [
     icon: "devicon-react-original"
   },
   {
-    id: 5,
+    id: 6,
     urlSlug: "Pagina-Automotora-Gestion-Vehiculos",
     title: "Plataforma Automotora y Gestión de Vehículos (En Desarrollo)",
     shortDescription: "Estoy desarrollando una aplicación web para la gestión de procesos automotrices y exhibición de vehículos.",

@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from './components/layout/Navbar';
+import Footer from './components/layout/Footer';
 import Hero from './components/sections/Hero';
 import Skills from './components/sections/Skills';
 import Projects from './components/sections/Projects';
 import Certificates from './components/sections/Certificates';
 import ProjectDetails from './components/sections/ProjectDetails';
 import FloatingButtons from './components/ui/FloatingButtons';
+import InteractiveBackground from './components/ui/InteractiveBackground';
 import { projectsData } from './data/projectsData';
 import './styles/background.css';
 
@@ -34,7 +36,19 @@ function App() {
     };
 
     window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
+
+    // Si se entra con un ancla (ej: devseba.cl/#proyectos), bajar a esa sección cuando ya esté renderizada
+    const hashTimer = window.location.hash
+      ? setTimeout(() => {
+          const target = document.querySelector(window.location.hash);
+          if (target) target.scrollIntoView();
+        }, 300)
+      : null;
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+      if (hashTimer) clearTimeout(hashTimer);
+    };
   }, []);
 
   const [wasInProject, setWasInProject] = useState(false);
@@ -69,7 +83,7 @@ function App() {
 
   return (
     <>
-      <div className="animated-background"></div>
+      <InteractiveBackground />
       
       {/* Si hay un proyecto activo, ocultamos el Navbar y las secciones principales */}
       {activeProject ? (
@@ -91,6 +105,7 @@ function App() {
         </>
       )}
 
+      <Footer />
       <FloatingButtons />
     </>
   );

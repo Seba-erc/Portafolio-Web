@@ -2,12 +2,14 @@ import React, { useEffect, useState, useRef } from 'react';
 import Lightbox from '../ui/Lightbox';
 import { useLanguage } from '../../context/LanguageContext';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
+import { parseProjectTitle } from './Projects';
+import { ArrowLeft, Play, ExternalLink } from '../ui/Icons';
 
 export default function ProjectDetails({ project, onBack }) {
   const { t } = useLanguage();
   const revealRef = useScrollReveal();
   const [lightboxIndex, setLightboxIndex] = useState(null);
-  
+
   // Variables de estado y referencia para el Drag-to-Scroll
   const sliderRef = useRef(null);
   const [isDown, setIsDown] = useState(false);
@@ -43,143 +45,138 @@ export default function ProjectDetails({ project, onBack }) {
 
   if (!project) return null;
 
+  const { cleanTitle, inProgress } = parseProjectTitle(project.title);
+  const hasSource = project.github && project.github !== '#' && project.github !== 'https://github.com/Seba-erc';
+  const hasDemo = project.demo && project.demo !== '#';
+
   return (
-    <section className="container" ref={revealRef} style={{ minHeight: '100vh', paddingTop: '6rem' }}>
-      <button 
-        onClick={onBack}
-        className="btn btn-outline reveal-element" 
-        style={{ marginBottom: '2rem', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-          <path fillRule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
-        </svg>
-        {t('details_back')}
-      </button>
+    <section className="details container" ref={revealRef}>
+      <div className="details-topbar reveal-element">
+        <button onClick={onBack} className="btn btn-ghost btn-sm" type="button">
+          <ArrowLeft /> {t('details_back')}
+        </button>
+      </div>
 
-      <div className="glass-card reveal-element delay-100" style={{ padding: '3rem', position: 'relative', overflow: 'hidden' }}>
-        {/* Fondo de ícono de agua gigante */}
-        <i className={project.icon} style={{ position: 'absolute', right: '-50px', top: '-50px', fontSize: '25rem', color: '#ffffff', opacity: '0.04', transform: 'rotate(-15deg)', pointerEvents: 'none' }}></i>
+      {/* Encabezado */}
+      <header className="details-header">
+        <span className="eyebrow reveal-element">{inProgress ? t('projects_in_progress') : t('details_eyebrow')}</span>
+        <h1 className="details-title reveal-element delay-100">{cleanTitle}</h1>
+        <p className="details-lead reveal-element delay-100">{project.shortDescription}</p>
 
-        <h1 style={{ fontSize: '2.5rem', marginBottom: '1.5rem', color: 'var(--text-primary)', zIndex: 1, position: 'relative' }}>
-          {project.title}
-        </h1>
-
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.8rem', marginBottom: '3rem', zIndex: 1, position: 'relative' }}>
-          {project.tech.map((tech, tIndex) => (
-            <span key={tIndex} style={{ backgroundColor: 'rgba(0, 210, 255, 0.1)', color: 'var(--accent-hover)', padding: '0.5rem 1.2rem', borderRadius: '20px', fontSize: '1rem', fontWeight: '600', border: '1px solid rgba(0, 210, 255, 0.2)' }}>
-              {tech}
-            </span>
+        <div className="details-tags reveal-element delay-200">
+          {project.tech.map((tech) => (
+            <span key={tech} className="tag">{tech}</span>
           ))}
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '1.5rem', zIndex: 1, position: 'relative', flexWrap: 'wrap', marginBottom: '3rem' }}>
-          {project.github && project.github !== "#" && project.github !== "https://github.com/Seba-erc" ? (
-            <a href={project.github} target="_blank" rel="noopener noreferrer" className="btn btn-outline" style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', fontSize: '1.1rem', padding: '0.8rem 2rem' }}>
-              <i className="devicon-github-original" style={{ fontSize: '1.5rem' }}></i> {t('details_source')}
+        <div className="details-actions reveal-element delay-200">
+          {hasDemo && (
+            <a href={project.demo} target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-lg">
+              <Play /> {t('details_demo')}
+            </a>
+          )}
+          {hasSource ? (
+            <a href={project.github} target="_blank" rel="noopener noreferrer" className="btn btn-secondary btn-lg">
+              <i className="devicon-github-original" style={{ fontSize: '1.15rem' }}></i> {t('details_source')}
             </a>
           ) : (
-            <div className="btn btn-outline" style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', fontSize: '1.1rem', padding: '0.8rem 2rem', opacity: 0.65, cursor: 'not-allowed', position: 'relative', overflow: 'hidden' }} title="Bloqueado por ahora">
-              <i className="devicon-github-original" style={{ fontSize: '1.5rem' }}></i> {t('details_source')}
-              <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none' }}>
-                <span style={{ color: '#ff3333', border: '3px solid #ff3333', background: 'rgba(0, 0, 0, 0.85)', padding: '0.3rem 0.8rem', borderRadius: '8px', fontSize: '0.9rem', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '1px', transform: 'rotate(-12deg)', textShadow: '1px 1px 2px rgba(0,0,0,1)', boxShadow: '0 4px 10px rgba(0,0,0,0.5)' }}>
-                  Bloqueado por ahora
-                </span>
+            <div className="btn btn-secondary btn-lg btn-locked" title={t('details_locked')} aria-disabled="true">
+              <i className="devicon-github-original" style={{ fontSize: '1.15rem' }}></i> {t('details_source')}
+              <div className="locked-stamp">
+                <span>{t('details_locked')}</span>
               </div>
             </div>
           )}
-          {project.demo !== "#" && (
-            <a href={project.demo} target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', fontSize: '1.1rem', padding: '0.8rem 2rem' }}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
-                <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM6.5 11.5L12 8 6.5 4.5v7Z"/>
-              </svg>
-              {t('details_demo')}
-            </a>
-          )}
+        </div>
+      </header>
+
+      {/* Imagen principal */}
+      {project.image && (
+        <div className="details-cover reveal-element delay-200">
+          <img src={project.image} alt={cleanTitle} />
+        </div>
+      )}
+
+      {/* Descripción + ficha técnica */}
+      <div className="details-grid">
+        <div className="reveal-element">
+          <h2 className="details-subtitle">{t('details_about')}</h2>
+          <div className="details-text">{project.longDescription}</div>
         </div>
 
-        <div style={{ zIndex: 1, position: 'relative', marginBottom: '4rem' }}>
-          <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: 'var(--text-secondary)' }}>{t('details_about')}</h2>
-          <div style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', lineHeight: '1.8', whiteSpace: 'pre-wrap' }}>
-            {project.longDescription}
+        <aside className="card spec-card reveal-element delay-100">
+          <div className="spec-row">
+            <span className="spec-label">{t('details_status')}</span>
+            {inProgress ? (
+              <span className="badge badge-warning"><span className="badge-dot"></span>{t('projects_in_progress')}</span>
+            ) : (
+              <span className="badge badge-success"><span className="badge-dot"></span>{t('cert_status_completed')}</span>
+            )}
           </div>
-        </div>
-
-        {project.gallery && project.gallery.length > 0 && (
-          <div style={{ zIndex: 1, position: 'relative', marginBottom: '4rem' }}>
-            <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: 'var(--text-secondary)' }}>{t('details_gallery')}</h2>
-            <div 
-              className="custom-scrollbar drag-scroll-container" 
-              ref={sliderRef}
-              onMouseDown={handleMouseDown}
-              onMouseLeave={handleMouseLeave}
-              onMouseUp={handleMouseUp}
-              onMouseMove={handleMouseMove}
-              style={{ 
-              display: 'flex', 
-              overflowX: 'auto', 
-              gap: '1rem', 
-              paddingBottom: '1.5rem',
-              scrollSnapType: isDown ? 'none' : 'x mandatory',
-              maxWidth: '100%',
-              WebkitOverflowScrolling: 'touch',
-              cursor: isDown ? 'grabbing' : 'grab'
-            }}>
-              {project.gallery.map((img, idx) => (
-                <img 
-                  key={idx} 
-                  src={img} 
-                  alt={`${project.title} screenshot ${idx + 1}`} 
-                  onClick={(e) => {
-                    if (isDragging) {
-                      e.stopPropagation();
-                      return;
-                    }
-                    setLightboxIndex(idx);
-                  }}
-                  style={{ 
-                    height: 'auto',
-                    maxHeight: '350px',
-                    width: '85vw',
-                    maxWidth: '600px',
-                    borderRadius: '12px', 
-                    objectFit: 'contain',
-                    border: '1px solid rgba(255,255,255,0.1)',
-                    backgroundColor: 'rgba(0,0,0,0.3)',
-                    scrollSnapAlign: 'center',
-                    flexShrink: 0,
-                    boxShadow: '0 10px 20px rgba(0,0,0,0.2)',
-                    userSelect: 'none',
-                    WebkitUserDrag: 'none'
-                  }} 
-                />
-              ))}
+          <div className="spec-row">
+            <span className="spec-label">{t('details_stack')}</span>
+            <div className="spec-value">{project.tech.join(' · ')}</div>
+          </div>
+          <div className="spec-row">
+            <span className="spec-label">{t('details_links')}</span>
+            <div className="spec-links">
+              {hasDemo && (
+                <a href={project.demo} target="_blank" rel="noopener noreferrer">
+                  <ExternalLink size={14} /> {t('details_demo')}
+                </a>
+              )}
+              {hasSource ? (
+                <a href={project.github} target="_blank" rel="noopener noreferrer">
+                  <ExternalLink size={14} /> {t('details_source')}
+                </a>
+              ) : (
+                <span className="spec-value" style={{ color: 'var(--text-dim)' }}>{t('details_source')} — {t('details_locked')}</span>
+              )}
             </div>
-            <style>{`
-              .custom-scrollbar::-webkit-scrollbar {
-                height: 8px;
-              }
-              .custom-scrollbar::-webkit-scrollbar-track {
-                background: rgba(255, 255, 255, 0.02);
-                border-radius: 4px;
-              }
-              .custom-scrollbar::-webkit-scrollbar-thumb {
-                background: rgba(0, 210, 255, 0.2);
-                border-radius: 4px;
-              }
-              .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-                background: rgba(0, 210, 255, 0.4);
-              }
-            `}</style>
           </div>
-        )}
-
+        </aside>
       </div>
 
+      {/* Galería */}
+      {project.gallery && project.gallery.length > 0 && (
+        <div className="reveal-element">
+          <h2 className="details-subtitle">{t('details_gallery')}</h2>
+          <div
+            className="custom-scrollbar gallery-track"
+            ref={sliderRef}
+            onMouseDown={handleMouseDown}
+            onMouseLeave={handleMouseLeave}
+            onMouseUp={handleMouseUp}
+            onMouseMove={handleMouseMove}
+            style={{
+              scrollSnapType: isDown ? 'none' : 'x mandatory',
+              cursor: isDown ? 'grabbing' : 'grab'
+            }}
+          >
+            {project.gallery.map((img, idx) => (
+              <img
+                key={idx}
+                src={img}
+                alt={`${cleanTitle} screenshot ${idx + 1}`}
+                loading="lazy"
+                onClick={(e) => {
+                  if (isDragging) {
+                    e.stopPropagation();
+                    return;
+                  }
+                  setLightboxIndex(idx);
+                }}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
       {lightboxIndex !== null && (
-        <Lightbox 
-          images={project.gallery} 
-          initialIndex={lightboxIndex} 
-          onClose={() => setLightboxIndex(null)} 
+        <Lightbox
+          images={project.gallery}
+          initialIndex={lightboxIndex}
+          onClose={() => setLightboxIndex(null)}
         />
       )}
     </section>
