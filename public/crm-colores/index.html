@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" type="image/png" href="./simbolo-vectorial.png" />
+    <title>Editor de Colores · CRM Vectorial</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="studio-shell">
+      <!-- Barra superior del editor de diseño -->
+      <header class="studio-topbar">
+        <div class="studio-brand">
+          <span class="studio-brand-badge">
+            <img src="./simbolo-vectorial.png" alt="Vectorial" />
+          </span>
+          <div>
+            <div class="studio-brand-title">CRM Vectorial · Laboratorio de Color</div>
+            <div class="studio-brand-sub">Prueba y personaliza los colores sobre los 16 mockups oficiales</div>
+          </div>
+        </div>
+
+        <div class="studio-controls">
+          <!-- Selector de las 16 pantallas del mockup -->
+          <div class="studio-select-wrap">
+            <span class="studio-select-label">Pantalla:</span>
+            <select id="screenSelect" class="studio-select" aria-label="Seleccionar pantalla del mockup"></select>
+            <div class="studio-nav-arrows">
+              <button type="button" id="prevScreenBtn" class="studio-icon-btn" title="Pantalla anterior">‹</button>
+              <button type="button" id="nextScreenBtn" class="studio-icon-btn" title="Siguiente pantalla">›</button>
+            </div>
+          </div>
+
+          <!-- Modo de vista: Ambos (Mockup), Escritorio, Móvil -->
+          <div class="studio-segmented" role="tablist" aria-label="Modo de vista">
+            <button type="button" data-view="both" class="active">Escritorio + Móvil</button>
+            <button type="button" data-view="desktop">Solo Escritorio</button>
+            <button type="button" data-view="mobile">Solo Móvil (390 px)</button>
+          </div>
+
+          <!-- Inspector directo clic para editar -->
+          <button type="button" id="inspectToggleBtn" class="studio-btn" title="Haz clic en cualquier barra, tarjeta o etiqueta del mockup para editar su color">
+            🎯 Tocar elemento
+          </button>
+
+          <!-- Compartir enlace con colores elegidos -->
+          <button type="button" id="shareUrlBtn" class="studio-btn studio-btn-success" title="Copia un enlace único que guarda todos los colores elegidos para enviarlo">
+            🔗 Guardar / Copiar enlace
+          </button>
+
+          <!-- Exportar CSS / Resumen -->
+          <button type="button" id="exportCssBtn" class="studio-btn studio-btn-primary">
+            📋 Ver códigos de color
+          </button>
+
+          <!-- Mostrar/ocultar panel -->
+          <button type="button" id="toggleDrawerBtn" class="studio-btn">
+            🎨 Panel
+          </button>
+        </div>
+      </header>
+
+      <!-- Cuerpo: Escenario de Mockups + Panel lateral de colores -->
+      <div id="studioBody" class="studio-body">
+        <main class="canvas-stage" data-edit-group="fondos">
+          <div class="mockup-board-header">
+            <div id="mockupBoardTag" class="mockup-board-tag">01 / CONTRASTE AZUL</div>
+            <div id="mockupBoardHint" class="mockup-board-hint">Interactivo: puedes navegar por los botones del CRM o cambiar cualquier color a la derecha</div>
+          </div>
+
+          <div id="framesLayout" class="frames-layout mode-both">
+            <!-- Marco Escritorio -->
+            <div class="frame-col-desktop">
+              <div class="frame-caption">Escritorio</div>
+              <div id="desktopFrame" class="crm-window"></div>
+            </div>
+
+            <!-- Marco Móvil 390 px -->
+            <div class="frame-col-mobile">
+              <div class="frame-caption">Móvil · 390 px</div>
+              <div id="mobileFrame" class="crm-window crm-mobile-shell"></div>
+            </div>
+          </div>
+        </main>
+
+        <!-- Panel Editor de Colores -->
+        <aside class="color-drawer" aria-label="Editor de colores">
+          <div class="drawer-header">
+            <div class="drawer-title-row">
+              <span class="drawer-title">Paletas rápidas sugeridas</span>
+              <button type="button" id="resetAllBtn" class="studio-btn" style="height:26px;padding:0 9px;font-size:11px;">
+                ↺ Original
+              </button>
+            </div>
+            <div id="presetGrid" class="preset-grid"></div>
+
+            <!-- Generador armónico desde 1 solo color -->
+            <div class="magic-bar">
+              <div class="magic-bar-left">
+                <input type="color" id="magicBrandPicker" value="#284fc5" title="Elige un color base" />
+                <span>Crear gama desde 1 color</span>
+              </div>
+              <button type="button" id="applyMagicBtn" class="studio-btn studio-btn-primary" style="height:28px;padding:0 10px;font-size:11.5px;">
+                ✨ Aplicar
+              </button>
+            </div>
+          </div>
+
+          <!-- Lista acordeón de todos los colores editables -->
+          <div id="tokenGroupsContainer" class="drawer-scroll"></div>
+
+          <div class="drawer-footer">
+            <button type="button" id="shareUrlBtnBottom" class="studio-btn studio-btn-success">
+              🔗 Copiar enlace con mi paleta
+            </button>
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    <!-- Modal Exportar CSS / Resumen de colores -->
+    <div id="exportModal" class="studio-modal-backdrop" hidden>
+      <div class="studio-modal">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+          <div>
+            <h2 style="font-family:var(--font-titulares);font-size:18px;font-weight:700;">Códigos de Color Seleccionados</h2>
+            <p style="font-size:12.5px;color:#94a3b8;margin-top:2px;">Listos para aplicar directamente en <code>globals.css</code> de CRM Vectorial o compartir.</p>
+          </div>
+          <button type="button" id="closeModalBtn" class="studio-icon-btn">✕</button>
+        </div>
+        <pre id="exportCodePre" class="studio-code-box"></pre>
+        <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:14px;">
+          <button type="button" id="downloadJsonBtn" class="studio-btn">⬇ Descargar .css</button>
+          <button type="button" id="copyCssCodeBtn" class="studio-btn studio-btn-primary">📋 Copiar códigos CSS</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="studioToast" class="studio-toast" hidden></div>
+
+    <script src="./screens.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
