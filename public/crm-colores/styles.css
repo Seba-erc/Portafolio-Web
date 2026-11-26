@@ -1462,6 +1462,7 @@ body.inspect-mode [data-edit-group]:hover {
 }
 
 .token-group {
+  flex-shrink: 0;
   border: 1px solid #1e293b;
   border-radius: 11px;
   background: #131c2e;
